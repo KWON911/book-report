@@ -111,13 +111,21 @@ export default function TeacherDashboardPage() {
             <p className="eyebrow mb-1">사서 데스크</p>
             <h1 className="text-2xl">교사 대시보드</h1>
           </div>
-          <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
-          >
-            로그아웃
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => router.push('/teacher/classes')}
+              className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft"
+            >
+              학급 관리
+            </button>
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
+            >
+              로그아웃
+            </button>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2 mb-4 items-center">
           <select

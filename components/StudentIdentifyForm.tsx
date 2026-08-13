@@ -1,19 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Student } from '@/lib/types';
 import { saveStudent } from '@/lib/student-session';
+
+type ClassOption = { id: string; name: string };
 
 export function StudentIdentifyForm({
   onIdentified,
 }: {
   onIdentified: (student: Student) => void;
 }) {
+  const [classes, setClasses] = useState<ClassOption[]>([]);
+  const [classesLoading, setClassesLoading] = useState(true);
   const [name, setName] = useState('');
-  const [className, setClassName] = useState('');
+  const [classId, setClassId] = useState('');
   const [number, setNumber] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/classes')
+      .then((res) => (res.ok ? res.json() : { classes: [] }))
+      .then((data) => setClasses(data?.classes ?? []))
+      .catch(() => setClasses([]))
+      .finally(() => setClassesLoading(false));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +35,7 @@ export function StudentIdentifyForm({
     try {
       const res = await fetch('/api/students/identify', {
         method: 'POST',
-        body: JSON.stringify({ name, className, number: Number(number) }),
+        body: JSON.stringify({ name, class_id: classId, number: Number(number) }),
       });
 
       if (!res.ok) {
@@ -60,14 +72,30 @@ export function StudentIdentifyForm({
       </label>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
         학급
-        <input
-          placeholder="예: 3학년 2반"
-          value={className}
-          onChange={(e) => setClassName(e.target.value)}
-          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
-          required
-          disabled={loading}
-        />
+        {classesLoading ? (
+          <p className="text-sm text-ink-soft py-2">학급 목록을 불러오는 중...</p>
+        ) : classes.length === 0 ? (
+          <p className="text-sm text-plum py-2">
+            아직 등록된 학급이 없어요. 선생님께 학급 등록을 요청해주세요.
+          </p>
+        ) : (
+          <select
+            value={classId}
+            onChange={(e) => setClassId(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+            required
+            disabled={loading}
+          >
+            <option value="" disabled>
+              학급을 선택하세요
+            </option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        )}
       </label>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
         번호
@@ -85,7 +113,7 @@ export function StudentIdentifyForm({
       <button
         type="submit"
         className="bg-forest text-paper-raised py-2 rounded disabled:opacity-50 hover:opacity-90"
-        disabled={loading}
+        disabled={loading || classes.length === 0}
       >
         {loading ? '진행 중...' : '시작하기'}
       </button>
