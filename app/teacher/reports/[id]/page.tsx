@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
+import { StatusStamp } from '@/components/StatusStamp';
 
 export default function TeacherReportDetailPage({
   params,
@@ -75,54 +76,57 @@ export default function TeacherReportDetailPage({
   if (!report) return null;
 
   return (
-    <main className="p-6 max-w-2xl">
+    <main className="max-w-2xl mx-auto p-6">
       <button
         onClick={() => router.push('/teacher/dashboard')}
-        className="text-blue-600 mb-4 hover:underline"
+        className="text-sm text-ink-soft mb-4 hover:underline"
       >
         &lt; 목록으로
       </button>
-      <h1 className="text-xl font-bold mb-4">{report.title}</h1>
-      <div className="space-y-2 mb-4 p-3 bg-gray-50 rounded">
-        <p>
-          <strong>저자:</strong> {report.author || '없음'}
+      <div className="flex items-baseline justify-between mb-4">
+        <h1 className="text-2xl">{report.title}</h1>
+        <StatusStamp status={report.status} />
+      </div>
+      <div className="card space-y-3 mb-5 p-4">
+        <p className="text-sm">
+          <span className="eyebrow mr-1">저자</span> {report.author || '없음'}
         </p>
-        <p>
-          <strong>줄거리:</strong>
-        </p>
-        <p className="whitespace-pre-wrap text-sm">{report.summary || '없음'}</p>
-        <p>
-          <strong>느낌/감상:</strong>
-        </p>
-        <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
+        <div>
+          <p className="eyebrow mb-1">줄거리</p>
+          <p className="whitespace-pre-wrap text-sm">{report.summary || '없음'}</p>
+        </div>
+        <div>
+          <p className="eyebrow mb-1">느낌/감상</p>
+          <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
+        </div>
       </div>
       <div className="space-y-3">
         <textarea
           placeholder="코멘트 (반려 시 사유 입력)"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="border p-2 rounded w-full min-h-[100px]"
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 w-full min-h-[100px] focus:outline-none focus:ring-2 focus:ring-forest"
           disabled={submitting}
         />
         <div className="flex gap-2">
           <button
             onClick={() => handleReview('approved')}
             disabled={submitting}
-            className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-green-700"
+            className="bg-forest text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
           >
             승인
           </button>
           <button
             onClick={() => handleReview('rejected')}
             disabled={submitting}
-            className="bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-red-700"
+            className="bg-brass text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
           >
             반려
           </button>
           <button
             onClick={handleDelete}
             disabled={submitting}
-            className="ml-auto bg-gray-200 text-gray-700 px-4 py-2 rounded disabled:opacity-50 hover:bg-gray-300"
+            className="ml-auto border border-line bg-paper-raised text-plum px-4 py-2 rounded disabled:opacity-50 hover:bg-slate-soft"
           >
             삭제
           </button>

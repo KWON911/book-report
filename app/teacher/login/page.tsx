@@ -34,22 +34,28 @@ export default function TeacherLoginPage() {
   }
 
   return (
-    <main className="p-6 flex justify-center items-center min-h-screen">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-sm w-full">
-        <h1 className="text-xl font-bold mb-2">교사 로그인</h1>
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
-          required
-          disabled={loading}
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+    <main className="min-h-full flex justify-center items-center p-6">
+      <form onSubmit={handleSubmit} className="card flex flex-col gap-4 max-w-sm w-full p-6">
+        <div>
+          <p className="eyebrow mb-1">사서 열람</p>
+          <h1 className="text-2xl">교사 로그인</h1>
+        </div>
+        <label className="flex flex-col gap-1 text-sm text-ink-soft">
+          비밀번호
+          <input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+            required
+            disabled={loading}
+          />
+        </label>
+        {error && <p className="text-plum text-sm">{error}</p>}
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded disabled:opacity-50 hover:bg-blue-700"
+          className="bg-forest text-paper-raised py-2 rounded disabled:opacity-50 hover:opacity-90"
           disabled={loading}
         >
           {loading ? '로그인 중...' : '로그인'}

@@ -6,3 +6,11 @@ export const STATUS_LABEL: Record<BookReport['status'], string> = {
   approved: '승인됨',
   rejected: '반려됨',
 };
+
+// Tailwind text/border color classes for the .stamp component — one per status.
+export const STATUS_STAMP_CLASS: Record<BookReport['status'], string> = {
+  draft: 'text-slate',
+  submitted: 'text-brass',
+  approved: 'text-forest',
+  rejected: 'text-plum',
+};

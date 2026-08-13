@@ -1,12 +1,5 @@
 import { BookReport } from '@/lib/types';
-import { STATUS_LABEL } from '@/lib/status-labels';
-
-const STATUS_COLOR: Record<BookReport['status'], string> = {
-  draft: 'bg-gray-200 text-gray-700',
-  submitted: 'bg-blue-200 text-blue-700',
-  approved: 'bg-green-200 text-green-700',
-  rejected: 'bg-red-200 text-red-700',
-};
+import { StatusStamp } from '@/components/StatusStamp';
 
 export function BookReportList({
   reports,
@@ -16,30 +9,26 @@ export function BookReportList({
   onEdit: (id: string) => void;
 }) {
   if (reports.length === 0) {
-    return <p className="text-gray-500">아직 작성한 독서록이 없어요.</p>;
+    return <p className="text-ink-soft">아직 작성한 독서록이 없어요. 위 버튼으로 첫 장을 채워보세요.</p>;
   }
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-3">
       {reports.map((report) => (
         <li
           key={report.id}
-          className="border rounded p-3 flex justify-between items-start cursor-pointer hover:bg-gray-50"
+          className="card p-4 flex justify-between items-start gap-3 cursor-pointer hover:-translate-y-0.5 transition-transform"
           onClick={() => onEdit(report.id)}
         >
-          <div className="flex-1">
-            <p className="font-medium">{report.title}</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium truncate">{report.title}</p>
             {report.status === 'rejected' && report.teacher_comment && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-plum mt-1">
                 반려 사유: {report.teacher_comment}
               </p>
             )}
           </div>
-          <span
-            className={`text-xs px-2 py-1 rounded whitespace-nowrap ml-2 ${STATUS_COLOR[report.status]}`}
-          >
-            {STATUS_LABEL[report.status]}
-          </span>
+          <StatusStamp status={report.status} />
         </li>
       ))}
     </ul>

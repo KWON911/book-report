@@ -104,22 +104,25 @@ export default function TeacherDashboardPage() {
   }
 
   return (
-    <main className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">교사 대시보드</h1>
+    <main className="max-w-4xl mx-auto p-6">
+      <div className="flex justify-between items-baseline mb-6">
+        <div>
+          <p className="eyebrow mb-1">사서 데스크</p>
+          <h1 className="text-2xl">교사 대시보드</h1>
+        </div>
         <button
           onClick={handleLogout}
           disabled={loggingOut}
-          className="text-sm bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500 disabled:opacity-50"
+          className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
         >
           로그아웃
         </button>
       </div>
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 items-center">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border p-2 rounded"
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
         >
           <option value="">전체 상태</option>
           <option value="submitted">제출됨</option>
@@ -129,7 +132,7 @@ export default function TeacherDashboardPage() {
         <select
           value={classFilter}
           onChange={(e) => setClassFilter(e.target.value)}
-          className="border p-2 rounded"
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
         >
           <option value="">전체 학급</option>
           {classes.map((c) => (
@@ -141,14 +144,14 @@ export default function TeacherDashboardPage() {
         <button
           onClick={handleResetClass}
           disabled={!classFilter || resettingClass}
-          className="ml-auto text-sm bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+          className="ml-auto text-sm bg-plum text-paper-raised px-3 py-2 rounded hover:opacity-90 disabled:opacity-50"
           title={!classFilter ? '학급을 먼저 선택하세요' : undefined}
         >
           학급 초기화
         </button>
       </div>
       {loading ? (
-        <p className="text-gray-500">로딩 중...</p>
+        <p className="text-ink-soft">로딩 중...</p>
       ) : (
         <TeacherReportList
           reports={reports}

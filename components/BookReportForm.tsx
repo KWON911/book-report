@@ -36,60 +36,75 @@ export function BookReportForm({
     }
   }
 
+  const inputClass =
+    'border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest';
+
   return (
-    <div className="flex flex-col gap-3 max-w-lg">
+    <div className="card flex flex-col gap-4 max-w-lg p-6">
       {initialData?.status === 'rejected' && initialData?.teacher_comment && (
-        <div className="bg-red-50 border border-red-300 p-3 rounded text-red-700">
+        <div className="border border-plum bg-plum-soft p-3 rounded text-plum">
           <p className="font-medium">반려 사유</p>
-          <p>{initialData.teacher_comment}</p>
+          <p className="text-sm mt-1">{initialData.teacher_comment}</p>
         </div>
       )}
       {error && (
-        <div className="bg-red-50 border border-red-300 p-3 rounded text-red-700">
-          <p>{error}</p>
+        <div className="border border-plum bg-plum-soft p-3 rounded text-plum text-sm">
+          {error}
         </div>
       )}
-      <input
-        placeholder="책 제목"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="border p-2 rounded"
-        required
-        disabled={saving}
-      />
-      <input
-        placeholder="저자"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-        className="border p-2 rounded"
-        disabled={saving}
-      />
-      <textarea
-        placeholder="줄거리"
-        value={summary}
-        onChange={(e) => setSummary(e.target.value)}
-        className="border p-2 rounded min-h-[100px]"
-        disabled={saving}
-      />
-      <textarea
-        placeholder="느낌/감상"
-        value={impression}
-        onChange={(e) => setImpression(e.target.value)}
-        className="border p-2 rounded min-h-[100px]"
-        disabled={saving}
-      />
-      <div className="flex gap-2">
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        책 제목
+        <input
+          placeholder="예: 어린 왕자"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className={inputClass}
+          required
+          disabled={saving}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        저자
+        <input
+          placeholder="예: 생텍쥐페리"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          className={inputClass}
+          disabled={saving}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        줄거리
+        <textarea
+          placeholder="어떤 이야기였나요?"
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          className={`${inputClass} min-h-[100px]`}
+          disabled={saving}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        느낌/감상
+        <textarea
+          placeholder="읽고 나서 어떤 생각이 들었나요?"
+          value={impression}
+          onChange={(e) => setImpression(e.target.value)}
+          className={`${inputClass} min-h-[100px]`}
+          disabled={saving}
+        />
+      </label>
+      <div className="flex gap-2 pt-1">
         <button
           disabled={saving || !title}
           onClick={() => handleSave('draft')}
-          className="bg-gray-400 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-gray-500"
+          className="border border-line bg-paper-raised text-ink px-4 py-2 rounded disabled:opacity-50 hover:bg-slate-soft"
         >
           임시저장
         </button>
         <button
           disabled={saving || !title}
           onClick={() => handleSave('submitted')}
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-700"
+          className="bg-forest text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
         >
           제출하기
         </button>

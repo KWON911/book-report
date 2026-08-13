@@ -42,36 +42,49 @@ export function StudentIdentifyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-sm">
-      <input
-        placeholder="이름"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="border p-2 rounded"
-        required
-        disabled={loading}
-      />
-      <input
-        placeholder="학급 (예: 3학년 2반)"
-        value={className}
-        onChange={(e) => setClassName(e.target.value)}
-        className="border p-2 rounded"
-        required
-        disabled={loading}
-      />
-      <input
-        placeholder="번호"
-        type="number"
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-        className="border p-2 rounded"
-        required
-        disabled={loading}
-      />
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+    <form onSubmit={handleSubmit} className="card flex flex-col gap-4 max-w-sm p-6">
+      <div>
+        <p className="eyebrow mb-1">대출카드 작성</p>
+        <h1 className="text-2xl">독서록 시작하기</h1>
+      </div>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        이름
+        <input
+          placeholder="예: 홍길동"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+          required
+          disabled={loading}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        학급
+        <input
+          placeholder="예: 3학년 2반"
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+          required
+          disabled={loading}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        번호
+        <input
+          placeholder="예: 5"
+          type="number"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+          required
+          disabled={loading}
+        />
+      </label>
+      {error && <p className="text-plum text-sm">{error}</p>}
       <button
         type="submit"
-        className="bg-blue-600 text-white p-2 rounded disabled:opacity-50"
+        className="bg-forest text-paper-raised py-2 rounded disabled:opacity-50 hover:opacity-90"
         disabled={loading}
       >
         {loading ? '진행 중...' : '시작하기'}

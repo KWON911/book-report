@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
-import { STATUS_LABEL } from '@/lib/status-labels';
+import { StatusStamp } from '@/components/StatusStamp';
 
 type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
@@ -20,7 +20,7 @@ export function TeacherReportList({
   const router = useRouter();
 
   if (reports.length === 0) {
-    return <p className="text-gray-500">표시할 독서록이 없습니다.</p>;
+    return <p className="text-ink-soft">표시할 독서록이 없습니다.</p>;
   }
 
   async function handleDeleteReport(e: React.MouseEvent, reportId: string) {
@@ -61,34 +61,36 @@ export function TeacherReportList({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="card overflow-x-auto">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b text-left">
-            <th className="p-2 text-sm font-medium">학급</th>
-            <th className="p-2 text-sm font-medium">이름</th>
-            <th className="p-2 text-sm font-medium">번호</th>
-            <th className="p-2 text-sm font-medium">제목</th>
-            <th className="p-2 text-sm font-medium">상태</th>
-            <th className="p-2 text-sm font-medium">관리</th>
+          <tr className="border-b border-line text-left">
+            <th className="p-3 eyebrow font-medium">학급</th>
+            <th className="p-3 eyebrow font-medium">이름</th>
+            <th className="p-3 eyebrow font-medium">번호</th>
+            <th className="p-3 eyebrow font-medium">제목</th>
+            <th className="p-3 eyebrow font-medium">상태</th>
+            <th className="p-3 eyebrow font-medium">관리</th>
           </tr>
         </thead>
         <tbody>
           {reports.map((report) => (
             <tr
               key={report.id}
-              className="border-b cursor-pointer hover:bg-gray-50"
+              className="border-b border-line last:border-0 cursor-pointer hover:bg-slate-soft"
               onClick={() => router.push(`/teacher/reports/${report.id}`)}
             >
-              <td className="p-2 text-sm">{report.student.class.name}</td>
-              <td className="p-2 text-sm">{report.student.name}</td>
-              <td className="p-2 text-sm">{report.student.number}</td>
-              <td className="p-2 text-sm">{report.title}</td>
-              <td className="p-2 text-sm">{STATUS_LABEL[report.status]}</td>
-              <td className="p-2 text-sm whitespace-nowrap">
+              <td className="p-3 text-sm">{report.student.class.name}</td>
+              <td className="p-3 text-sm">{report.student.name}</td>
+              <td className="p-3 text-sm">{report.student.number}</td>
+              <td className="p-3 text-sm">{report.title}</td>
+              <td className="p-3 text-sm">
+                <StatusStamp status={report.status} />
+              </td>
+              <td className="p-3 text-sm whitespace-nowrap">
                 <button
                   onClick={(e) => handleDeleteReport(e, report.id)}
-                  className="text-red-600 hover:underline mr-3"
+                  className="text-plum hover:underline mr-3"
                 >
                   독서록 삭제
                 </button>
@@ -96,7 +98,7 @@ export function TeacherReportList({
                   onClick={(e) =>
                     handleDeleteStudent(e, report.student.id, report.student.name)
                   }
-                  className="text-red-800 hover:underline"
+                  className="text-plum hover:underline"
                 >
                   학생 삭제
                 </button>
