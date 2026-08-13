@@ -22,7 +22,7 @@ export async function PATCH(
   }
 
   const { data, error } = await supabaseClient
-    .from('book_reports')
+    .from('book_report_entries')
     .update({ status: decision, teacher_comment: comment ?? null })
     .eq('id', id)
     .select()

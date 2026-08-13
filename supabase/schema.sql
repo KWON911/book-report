@@ -1,19 +1,23 @@
-create table classes (
+-- Table names are prefixed with book_report_ because this app shares a
+-- Supabase project with other apps that already have tables named
+-- `students`, `classes`, etc.
+
+create table book_report_classes (
   id uuid primary key default gen_random_uuid(),
   name text not null unique
 );
 
-create table students (
+create table book_report_students (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  class_id uuid not null references classes(id),
+  class_id uuid not null references book_report_classes(id),
   number int not null,
   unique (name, class_id, number)
 );
 
-create table book_reports (
+create table book_report_entries (
   id uuid primary key default gen_random_uuid(),
-  student_id uuid not null references students(id),
+  student_id uuid not null references book_report_students(id),
   title text not null,
   author text,
   summary text,
@@ -45,23 +49,23 @@ create table book_reports (
 -- server-side, with RLS policies that deny the anon role entirely and enforce
 -- authorization (e.g. status transitions) at the database layer.
 
-alter table classes enable row level security;
-alter table students enable row level security;
-alter table book_reports enable row level security;
+alter table book_report_classes enable row level security;
+alter table book_report_students enable row level security;
+alter table book_report_entries enable row level security;
 
-create policy "anon can select classes" on classes
+create policy "anon can select book_report_classes" on book_report_classes
   for select to anon using (true);
-create policy "anon can insert classes" on classes
+create policy "anon can insert book_report_classes" on book_report_classes
   for insert to anon with check (true);
 
-create policy "anon can select students" on students
+create policy "anon can select book_report_students" on book_report_students
   for select to anon using (true);
-create policy "anon can insert students" on students
+create policy "anon can insert book_report_students" on book_report_students
   for insert to anon with check (true);
 
-create policy "anon can select book_reports" on book_reports
+create policy "anon can select book_report_entries" on book_report_entries
   for select to anon using (true);
-create policy "anon can insert book_reports" on book_reports
+create policy "anon can insert book_report_entries" on book_report_entries
   for insert to anon with check (true);
-create policy "anon can update book_reports" on book_reports
+create policy "anon can update book_report_entries" on book_report_entries
   for update to anon using (true) with check (true);

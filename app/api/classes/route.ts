@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   }
 
   const { data, error } = await supabaseClient
-    .from('classes')
+    .from('book_report_classes')
     .select('id, name')
     .order('name', { ascending: true });
 

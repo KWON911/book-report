@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   }
 
   const { data, error } = await supabaseClient
-    .from('book_reports')
+    .from('book_report_entries')
     .select('*')
     .eq('student_id', studentId)
     .order('created_at', { ascending: false });
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   }
 
   const { data, error } = await supabaseClient
-    .from('book_reports')
+    .from('book_report_entries')
     .insert(insertData)
     .select()
     .single();

@@ -18,14 +18,14 @@ export async function POST(req: Request) {
   const UNIQUE_VIOLATION = '23505';
 
   let { data: classRow } = await supabaseClient
-    .from('classes')
+    .from('book_report_classes')
     .select('id, name')
     .eq('name', className)
     .maybeSingle();
 
   if (!classRow) {
     const { data: newClass, error: classError } = await supabaseClient
-      .from('classes')
+      .from('book_report_classes')
       .insert({ name: className })
       .select()
       .single();
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     if (classError && classError.code === UNIQUE_VIOLATION) {
       // Lost the race to create this class — re-select the row the winner inserted.
       const { data: existingClass, error: reselectError } = await supabaseClient
-        .from('classes')
+        .from('book_report_classes')
         .select('id, name')
         .eq('name', className)
         .maybeSingle();
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   }
 
   let { data: studentRow } = await supabaseClient
-    .from('students')
+    .from('book_report_students')
     .select('id, name, class_id, number')
     .eq('class_id', classRow.id)
     .eq('name', name)
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
   if (!studentRow) {
     const { data: newStudent, error: studentError } = await supabaseClient
-      .from('students')
+      .from('book_report_students')
       .insert({ name, class_id: classRow.id, number })
       .select()
       .single();
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     if (studentError && studentError.code === UNIQUE_VIOLATION) {
       // Lost the race to create this student — re-select the row the winner inserted.
       const { data: existingStudent, error: reselectError } = await supabaseClient
-        .from('students')
+        .from('book_report_students')
         .select('id, name, class_id, number')
         .eq('class_id', classRow.id)
         .eq('name', name)

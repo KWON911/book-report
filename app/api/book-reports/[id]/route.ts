@@ -12,7 +12,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const { data, error } = await supabaseClient
-    .from('book_reports')
+    .from('book_report_entries')
     .select('*')
     .eq('id', id)
     .single();
@@ -57,7 +57,7 @@ export async function PATCH(
   }
 
   const { data, error } = await supabaseClient
-    .from('book_reports')
+    .from('book_report_entries')
     .update(updateData)
     .eq('id', id)
     .select()
