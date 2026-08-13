@@ -32,7 +32,7 @@ describe('PATCH /api/teacher/book-reports/[id]/review', () => {
       method: 'PATCH',
       body: JSON.stringify({ decision: 'approved' }),
     });
-    const res = await PATCH(req, { params: { id: '1' } });
+    const res = await PATCH(req, { params: Promise.resolve({ id: '1' }) });
     expect(res.status).toBe(401);
   });
 });

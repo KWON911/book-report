@@ -4,12 +4,13 @@ import { verifyTeacherSession } from '@/lib/teacher-session';
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   if (!verifyTeacherSession(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const { id } = await params;
   const body = await req.json();
   const { decision, comment } = body;
 
@@ -23,7 +24,7 @@ export async function PATCH(
   const { data, error } = await supabaseClient
     .from('book_reports')
     .update({ status: decision, teacher_comment: comment ?? null })
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single();
 

@@ -30,6 +30,10 @@ export async function POST(req: Request) {
     classRow = newClass;
   }
 
+  if (!classRow) {
+    return NextResponse.json({ error: 'Failed to get or create class' }, { status: 500 });
+  }
+
   let { data: studentRow } = await supabaseClient
     .from('students')
     .select('id, name, class_id, number')
@@ -48,6 +52,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: studentError.message }, { status: 500 });
     }
     studentRow = newStudent;
+  }
+
+  if (!studentRow) {
+    return NextResponse.json({ error: 'Failed to get or create student' }, { status: 500 });
   }
 
   return NextResponse.json({ student: studentRow });

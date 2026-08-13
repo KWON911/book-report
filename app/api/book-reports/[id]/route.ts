@@ -3,12 +3,13 @@ import { supabaseClient } from '@/lib/supabase';
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { data, error } = await supabaseClient
     .from('book_reports')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (error) {
@@ -20,8 +21,9 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const body = await req.json();
   const { title, author, summary, impression, status } = body;
 
@@ -41,7 +43,7 @@ export async function PATCH(
   const { data, error } = await supabaseClient
     .from('book_reports')
     .update(updateData)
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single();
 
