@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { TrashIcon } from '@/components/TrashIcon';
 
 type ClassOption = { id: string; name: string };
 
@@ -12,6 +13,7 @@ export default function TeacherClassesPage() {
   const [newName, setNewName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [resettingId, setResettingId] = useState<string | null>(null);
 
   function loadClasses() {
     setLoading(true);
@@ -54,6 +56,35 @@ export default function TeacherClassesPage() {
     }
   }
 
+  async function handleReset(e: React.MouseEvent, cls: ClassOption) {
+    e.stopPropagation();
+
+    const typed = prompt(
+      `'${cls.name}' 학급의 모든 학생과 독서록이 삭제됩니다. 되돌릴 수 없습니다.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`
+    );
+    if (typed === null) return;
+    if (typed !== cls.name) {
+      alert('입력한 학급 이름이 일치하지 않아 취소되었습니다.');
+      return;
+    }
+
+    setResettingId(cls.id);
+    try {
+      const res = await fetch(`/api/teacher/classes/${cls.id}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ confirmName: typed }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to reset class');
+      }
+      alert('학급이 초기화되었습니다.');
+    } catch (err) {
+      alert('학급 초기화 중 오류가 발생했습니다.');
+    } finally {
+      setResettingId(null);
+    }
+  }
+
   return (
     <main className="min-h-full flex items-center justify-center p-6">
       <div className="w-full max-w-md">
@@ -92,8 +123,20 @@ export default function TeacherClassesPage() {
         ) : (
           <ul className="card divide-y divide-line">
             {classes.map((c) => (
-              <li key={c.id} className="px-4 py-3 text-sm">
-                {c.name}
+              <li
+                key={c.id}
+                className="px-4 py-3 text-sm flex justify-between items-center cursor-pointer hover:bg-slate-soft"
+                onClick={() => router.push(`/teacher/classes/${c.id}`)}
+              >
+                <span>{c.name}</span>
+                <button
+                  onClick={(e) => handleReset(e, c)}
+                  disabled={resettingId === c.id}
+                  title="학급 초기화"
+                  className="text-plum hover:opacity-70 p-1 disabled:opacity-50"
+                >
+                  <TrashIcon />
+                </button>
               </li>
             ))}
           </ul>

@@ -4,6 +4,8 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
+import { TrashIcon } from '@/components/TrashIcon';
+import { formatDate } from '@/lib/format-date';
 
 export default function TeacherReportDetailPage({
   params,
@@ -84,13 +86,17 @@ export default function TeacherReportDetailPage({
         >
           &lt; 목록으로
         </button>
-        <div className="flex items-baseline justify-between mb-4">
+        <div className="flex items-baseline justify-between mb-1">
           <h1 className="text-2xl">{report.title}</h1>
           <StatusStamp status={report.status} />
         </div>
+        <p className="text-xs text-ink-soft mb-4">
+          {formatDate(report.submitted_at ?? report.created_at)}
+          {report.submitted_at ? ' 제출' : ' 작성'}
+        </p>
         <div className="card space-y-3 mb-5 p-4">
           <p className="text-sm">
-            <span className="eyebrow mr-1">저자</span> {report.author || '없음'}
+            <span className="eyebrow mr-1">지은이</span> {report.author || '없음'}
           </p>
           <div>
             <p className="eyebrow mb-1">줄거리</p>
@@ -127,9 +133,10 @@ export default function TeacherReportDetailPage({
             <button
               onClick={handleDelete}
               disabled={submitting}
-              className="ml-auto border border-line bg-paper-raised text-plum px-4 py-2 rounded disabled:opacity-50 hover:bg-slate-soft"
+              title="독서록 삭제"
+              className="ml-auto border border-line bg-paper-raised text-plum p-2 rounded disabled:opacity-50 hover:bg-slate-soft"
             >
-              삭제
+              <TrashIcon />
             </button>
           </div>
         </div>

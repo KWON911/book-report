@@ -1,5 +1,6 @@
 import { BookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
+import { formatDate } from '@/lib/format-date';
 
 export function BookReportList({
   reports,
@@ -22,9 +23,13 @@ export function BookReportList({
         >
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{report.title}</p>
+            <p className="text-xs text-ink-soft mt-1">
+              {formatDate(report.submitted_at ?? report.created_at)}
+              {report.submitted_at ? ' 제출' : ' 작성'}
+            </p>
             {report.status === 'rejected' && report.teacher_comment && (
               <p className="text-sm text-plum mt-1">
-                반려 사유: {report.teacher_comment}
+                선생님 말씀: {report.teacher_comment}
               </p>
             )}
           </div>

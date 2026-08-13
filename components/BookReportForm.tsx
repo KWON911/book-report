@@ -43,7 +43,7 @@ export function BookReportForm({
     <div className="card flex flex-col gap-4 max-w-lg p-6">
       {initialData?.status === 'rejected' && initialData?.teacher_comment && (
         <div className="border border-plum bg-plum-soft p-3 rounded text-plum">
-          <p className="font-medium">반려 사유</p>
+          <p className="font-medium">선생님 말씀</p>
           <p className="text-sm mt-1">{initialData.teacher_comment}</p>
         </div>
       )}
@@ -64,7 +64,7 @@ export function BookReportForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
-        저자
+        지은이
         <input
           placeholder="예: 생텍쥐페리"
           value={author}
