@@ -15,8 +15,8 @@ export async function GET(req: Request) {
   // filter on that relation (student.class_id) to actually constrain the parent
   // rows. Without it, `.eq('student.class_id', ...)` is silently ignored.
   const studentEmbed = classId
-    ? 'student:book_report_students!inner(name, number, class_id, class:book_report_classes(name))'
-    : 'student:book_report_students(name, number, class_id, class:book_report_classes(name))';
+    ? 'student:book_report_students!inner(id, name, number, class_id, class:book_report_classes(name))'
+    : 'student:book_report_students(id, name, number, class_id, class:book_report_classes(name))';
 
   let query = supabaseClient
     .from('book_report_entries')

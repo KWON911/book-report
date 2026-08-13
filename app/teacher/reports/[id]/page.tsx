@@ -50,6 +50,27 @@ export default function TeacherReportDetailPage({
     }
   }
 
+  async function handleDelete() {
+    if (!report) return;
+    if (!confirm('이 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/teacher/book-reports/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to delete report');
+      }
+
+      router.push('/teacher/dashboard');
+    } catch (err) {
+      alert('삭제 중 오류가 발생했습니다.');
+      setSubmitting(false);
+    }
+  }
+
   if (loading) return null;
   if (!report) return null;
 
@@ -97,6 +118,13 @@ export default function TeacherReportDetailPage({
             className="bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-red-700"
           >
             반려
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={submitting}
+            className="ml-auto bg-gray-200 text-gray-700 px-4 py-2 rounded disabled:opacity-50 hover:bg-gray-300"
+          >
+            삭제
           </button>
         </div>
       </div>

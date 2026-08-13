@@ -62,6 +62,8 @@ create policy "anon can select book_report_students" on book_report_students
   for select to anon using (true);
 create policy "anon can insert book_report_students" on book_report_students
   for insert to anon with check (true);
+create policy "anon can delete book_report_students" on book_report_students
+  for delete to anon using (true);
 
 create policy "anon can select book_report_entries" on book_report_entries
   for select to anon using (true);
@@ -69,3 +71,5 @@ create policy "anon can insert book_report_entries" on book_report_entries
   for insert to anon with check (true);
 create policy "anon can update book_report_entries" on book_report_entries
   for update to anon using (true) with check (true);
+create policy "anon can delete book_report_entries" on book_report_entries
+  for delete to anon using (true);

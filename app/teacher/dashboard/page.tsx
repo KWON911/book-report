@@ -6,7 +6,7 @@ import { BookReport } from '@/lib/types';
 import { TeacherReportList } from '@/components/TeacherReportList';
 
 type TeacherReport = BookReport & {
-  student: { name: string; number: number; class: { name: string } };
+  student: { id: string; name: string; number: number; class: { name: string } };
 };
 
 type ClassOption = { id: string; name: string };
@@ -19,6 +19,7 @@ export default function TeacherDashboardPage() {
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [resettingClass, setResettingClass] = useState(false);
 
   useEffect(() => {
     fetch('/api/classes')
@@ -60,6 +61,48 @@ export default function TeacherDashboardPage() {
     }
   }
 
+  function handleReportDeleted(reportId: string) {
+    setReports((prev) => prev.filter((r) => r.id !== reportId));
+  }
+
+  function handleStudentDeleted(studentId: string) {
+    setReports((prev) => prev.filter((r) => r.student.id !== studentId));
+  }
+
+  async function handleResetClass() {
+    const selectedClass = classes.find((c) => c.id === classFilter);
+    if (!selectedClass) {
+      alert('초기화할 학급을 먼저 선택해주세요.');
+      return;
+    }
+
+    const typed = prompt(
+      `'${selectedClass.name}' 학급의 모든 학생과 독서록이 삭제됩니다. 되돌릴 수 없습니다.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`
+    );
+    if (typed === null) return;
+    if (typed !== selectedClass.name) {
+      alert('입력한 학급 이름이 일치하지 않아 취소되었습니다.');
+      return;
+    }
+
+    setResettingClass(true);
+    try {
+      const res = await fetch(`/api/teacher/classes/${selectedClass.id}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ confirmName: typed }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to reset class');
+      }
+      setReports((prev) => prev.filter((r) => r.student.class.name !== selectedClass.name));
+      alert('학급이 초기화되었습니다.');
+    } catch (err) {
+      alert('학급 초기화 중 오류가 발생했습니다.');
+    } finally {
+      setResettingClass(false);
+    }
+  }
+
   return (
     <main className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -95,11 +138,23 @@ export default function TeacherDashboardPage() {
             </option>
           ))}
         </select>
+        <button
+          onClick={handleResetClass}
+          disabled={!classFilter || resettingClass}
+          className="ml-auto text-sm bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+          title={!classFilter ? '학급을 먼저 선택하세요' : undefined}
+        >
+          학급 초기화
+        </button>
       </div>
       {loading ? (
         <p className="text-gray-500">로딩 중...</p>
       ) : (
-        <TeacherReportList reports={reports} />
+        <TeacherReportList
+          reports={reports}
+          onReportDeleted={handleReportDeleted}
+          onStudentDeleted={handleStudentDeleted}
+        />
       )}
     </main>
   );
