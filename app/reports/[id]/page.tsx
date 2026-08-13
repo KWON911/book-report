@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 import { BookReportForm } from '@/components/BookReportForm';
@@ -8,14 +8,15 @@ import { BookReportForm } from '@/components/BookReportForm';
 export default function EditReportPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = use(params);
   const router = useRouter();
   const [report, setReport] = useState<BookReport | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/book-reports/${params.id}`)
+    fetch(`/api/book-reports/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setReport(data.report);
@@ -25,13 +26,13 @@ export default function EditReportPage({
         setLoading(false);
         router.push('/');
       });
-  }, [params.id, router]);
+  }, [id, router]);
 
   async function handleSave(
     data: { title: string; author: string; summary: string; impression: string },
     status: 'draft' | 'submitted'
   ) {
-    const res = await fetch(`/api/book-reports/${params.id}`, {
+    const res = await fetch(`/api/book-reports/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ ...data, status }),
     });

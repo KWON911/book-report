@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { supabaseClient } from '@/lib/supabase';
 
+// Intentionally unauthenticated: any caller who knows/guesses a report UUID can
+// read that single report. Given this app's overall trust model (students are
+// only identified by name+class+number, not real auth), this is acceptable for
+// a small-scale classroom deployment — a leaked UUID exposes one report, not
+// the dataset.
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -13,7 +18,8 @@ export async function GET(
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 404 });
+    console.error('GET /api/book-reports/[id] failed:', error);
+    return NextResponse.json({ error: 'Report not found' }, { status: 404 });
   }
 
   return NextResponse.json({ report: data });
@@ -26,6 +32,16 @@ export async function PATCH(
   const { id } = await params;
   const body = await req.json();
   const { title, author, summary, impression, status } = body;
+
+  // This endpoint is student-facing and unauthenticated. Students may only move
+  // a report to 'draft' or 'submitted' — moving to 'approved'/'rejected' must go
+  // through the teacher-authenticated /api/teacher/book-reports/[id]/review route.
+  if (status !== undefined && status !== 'draft' && status !== 'submitted') {
+    return NextResponse.json(
+      { error: 'status must be draft or submitted' },
+      { status: 400 }
+    );
+  }
 
   const updateData: Record<string, unknown> = {};
   if (title !== undefined) updateData.title = title;
@@ -48,7 +64,8 @@ export async function PATCH(
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('PATCH /api/book-reports/[id] failed:', error);
+    return NextResponse.json({ error: 'Failed to update report' }, { status: 500 });
   }
 
   return NextResponse.json({ report: data });

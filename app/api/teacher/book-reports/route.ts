@@ -11,9 +11,16 @@ export async function GET(req: Request) {
   const classId = searchParams.get('class_id');
   const status = searchParams.get('status');
 
+  // PostgREST requires the `!inner` join modifier on an embedded relation for a
+  // filter on that relation (student.class_id) to actually constrain the parent
+  // rows. Without it, `.eq('student.class_id', ...)` is silently ignored.
+  const studentEmbed = classId
+    ? 'student:students!inner(name, number, class_id, class:classes(name))'
+    : 'student:students(name, number, class_id, class:classes(name))';
+
   let query = supabaseClient
     .from('book_reports')
-    .select('*, student:students(name, number, class_id, class:classes(name))')
+    .select(`*, ${studentEmbed}`)
     .order('created_at', { ascending: false });
 
   if (status) {
@@ -26,7 +33,8 @@ export async function GET(req: Request) {
   const { data, error } = await query;
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('GET /api/teacher/book-reports failed:', error);
+    return NextResponse.json({ error: 'Failed to load reports' }, { status: 500 });
   }
 
   return NextResponse.json({ reports: data });

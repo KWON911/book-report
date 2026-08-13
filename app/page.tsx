@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Student, BookReport } from '@/lib/types';
-import { getStudent } from '@/lib/student-session';
+import { getStudent, clearStudent } from '@/lib/student-session';
 import { StudentIdentifyForm } from '@/components/StudentIdentifyForm';
 import { BookReportList } from '@/components/BookReportList';
 
@@ -40,7 +40,18 @@ export default function HomePage() {
 
   return (
     <main className="p-6">
-      <h1 className="text-xl font-bold mb-4">{student.name}님의 독서록</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold">{student.name}님의 독서록</h1>
+        <button
+          onClick={() => {
+            clearStudent();
+            setStudent(null);
+          }}
+          className="text-sm text-gray-500 hover:underline"
+        >
+          다른 학생으로 전환
+        </button>
+      </div>
       <button
         onClick={() => router.push('/reports/new')}
         className="bg-blue-600 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700"

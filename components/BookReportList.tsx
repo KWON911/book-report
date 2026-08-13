@@ -1,11 +1,5 @@
 import { BookReport } from '@/lib/types';
-
-const STATUS_LABEL: Record<BookReport['status'], string> = {
-  draft: '임시저장',
-  submitted: '제출됨',
-  approved: '승인됨',
-  rejected: '반려됨',
-};
+import { STATUS_LABEL } from '@/lib/status-labels';
 
 const STATUS_COLOR: Record<BookReport['status'], string> = {
   draft: 'bg-gray-200 text-gray-700',

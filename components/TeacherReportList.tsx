@@ -2,16 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
+import { STATUS_LABEL } from '@/lib/status-labels';
 
 type TeacherReport = BookReport & {
   student: { name: string; number: number; class: { name: string } };
-};
-
-const STATUS_LABEL: Record<BookReport['status'], string> = {
-  draft: '임시저장',
-  submitted: '제출됨',
-  approved: '승인됨',
-  rejected: '반려됨',
 };
 
 export function TeacherReportList({ reports }: { reports: TeacherReport[] }) {

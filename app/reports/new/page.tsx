@@ -1,15 +1,24 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getStudent } from '@/lib/student-session';
+import { Student } from '@/lib/types';
 import { BookReportForm } from '@/components/BookReportForm';
 
 export default function NewReportPage() {
   const router = useRouter();
-  const student = getStudent();
+  const [student, setStudent] = useState<Student | null | undefined>(undefined);
+
+  useEffect(() => {
+    const s = getStudent();
+    setStudent(s);
+    if (!s) {
+      router.push('/');
+    }
+  }, [router]);
 
   if (!student) {
-    router.push('/');
     return null;
   }
 

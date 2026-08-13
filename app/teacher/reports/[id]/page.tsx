@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 
 export default function TeacherReportDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = use(params);
   const router = useRouter();
   const [report, setReport] = useState<BookReport | null>(null);
   const [comment, setComment] = useState('');
@@ -16,7 +17,7 @@ export default function TeacherReportDetailPage({
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/book-reports/${params.id}`)
+    fetch(`/api/book-reports/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setReport(data.report);
@@ -26,14 +27,14 @@ export default function TeacherReportDetailPage({
         setLoading(false);
         router.push('/teacher/dashboard');
       });
-  }, [params.id, router]);
+  }, [id, router]);
 
   async function handleReview(decision: 'approved' | 'rejected') {
     if (!report) return;
     setSubmitting(true);
 
     try {
-      const res = await fetch(`/api/teacher/book-reports/${params.id}/review`, {
+      const res = await fetch(`/api/teacher/book-reports/${id}/review`, {
         method: 'PATCH',
         body: JSON.stringify({ decision, comment }),
       });

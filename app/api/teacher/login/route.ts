@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { createTeacherSessionToken } from '@/lib/teacher-session';
 
 export async function POST(req: Request) {
+  if (!process.env.TEACHER_PASSWORD) {
+    return NextResponse.json(
+      { error: 'Server misconfigured: TEACHER_PASSWORD is not set' },
+      { status: 500 }
+    );
+  }
+
   const body = await req.json();
   const { password } = body;
 
