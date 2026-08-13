@@ -47,10 +47,12 @@ export default function EditReportPage({
   if (loading || !report) return null;
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <p className="eyebrow mb-1">대출카드 수정</p>
-      <h1 className="text-2xl mb-5">독서록 수정</h1>
-      <BookReportForm initialData={report} onSave={handleSave} />
+    <main className="min-h-full flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <p className="eyebrow mb-1">대출카드 수정</p>
+        <h1 className="text-2xl mb-5">독서록 수정</h1>
+        <BookReportForm initialData={report} onSave={handleSave} />
+      </div>
     </main>
   );
 }

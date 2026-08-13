@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className={`${display.variable} ${body.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="h-full flex flex-col">{children}</body>
     </html>
   );
 }

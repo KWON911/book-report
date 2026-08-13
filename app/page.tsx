@@ -38,32 +38,34 @@ export default function HomePage() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <div className="flex justify-between items-baseline mb-6">
-        <div>
-          <p className="eyebrow mb-1">대출카드</p>
-          <h1 className="text-2xl">{student.name}님의 독서록</h1>
+    <main className="min-h-full flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <div className="flex justify-between items-baseline mb-6">
+          <div>
+            <p className="eyebrow mb-1">대출카드</p>
+            <h1 className="text-2xl">{student.name}님의 독서록</h1>
+          </div>
+          <button
+            onClick={() => {
+              clearStudent();
+              setStudent(null);
+            }}
+            className="text-sm text-ink-soft hover:underline"
+          >
+            다른 학생으로 전환
+          </button>
         </div>
         <button
-          onClick={() => {
-            clearStudent();
-            setStudent(null);
-          }}
-          className="text-sm text-ink-soft hover:underline"
+          onClick={() => router.push('/reports/new')}
+          className="bg-forest text-paper-raised px-4 py-2 rounded mb-6 hover:opacity-90"
         >
-          다른 학생으로 전환
+          + 새 독서록 작성
         </button>
+        <BookReportList
+          reports={reports}
+          onEdit={(id) => router.push(`/reports/${id}`)}
+        />
       </div>
-      <button
-        onClick={() => router.push('/reports/new')}
-        className="bg-forest text-paper-raised px-4 py-2 rounded mb-6 hover:opacity-90"
-      >
-        + 새 독서록 작성
-      </button>
-      <BookReportList
-        reports={reports}
-        onEdit={(id) => router.push(`/reports/${id}`)}
-      />
     </main>
   );
 }

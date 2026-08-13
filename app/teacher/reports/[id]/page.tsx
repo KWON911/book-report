@@ -76,60 +76,62 @@ export default function TeacherReportDetailPage({
   if (!report) return null;
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <button
-        onClick={() => router.push('/teacher/dashboard')}
-        className="text-sm text-ink-soft mb-4 hover:underline"
-      >
-        &lt; 목록으로
-      </button>
-      <div className="flex items-baseline justify-between mb-4">
-        <h1 className="text-2xl">{report.title}</h1>
-        <StatusStamp status={report.status} />
-      </div>
-      <div className="card space-y-3 mb-5 p-4">
-        <p className="text-sm">
-          <span className="eyebrow mr-1">저자</span> {report.author || '없음'}
-        </p>
-        <div>
-          <p className="eyebrow mb-1">줄거리</p>
-          <p className="whitespace-pre-wrap text-sm">{report.summary || '없음'}</p>
+    <main className="min-h-full flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <button
+          onClick={() => router.push('/teacher/dashboard')}
+          className="text-sm text-ink-soft mb-4 hover:underline"
+        >
+          &lt; 목록으로
+        </button>
+        <div className="flex items-baseline justify-between mb-4">
+          <h1 className="text-2xl">{report.title}</h1>
+          <StatusStamp status={report.status} />
         </div>
-        <div>
-          <p className="eyebrow mb-1">느낌/감상</p>
-          <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
+        <div className="card space-y-3 mb-5 p-4">
+          <p className="text-sm">
+            <span className="eyebrow mr-1">저자</span> {report.author || '없음'}
+          </p>
+          <div>
+            <p className="eyebrow mb-1">줄거리</p>
+            <p className="whitespace-pre-wrap text-sm">{report.summary || '없음'}</p>
+          </div>
+          <div>
+            <p className="eyebrow mb-1">느낌/감상</p>
+            <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
+          </div>
         </div>
-      </div>
-      <div className="space-y-3">
-        <textarea
-          placeholder="코멘트 (반려 시 사유 입력)"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 w-full min-h-[100px] focus:outline-none focus:ring-2 focus:ring-forest"
-          disabled={submitting}
-        />
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleReview('approved')}
+        <div className="space-y-3">
+          <textarea
+            placeholder="코멘트 (반려 시 사유 입력)"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2 w-full min-h-[100px] focus:outline-none focus:ring-2 focus:ring-forest"
             disabled={submitting}
-            className="bg-forest text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
-          >
-            승인
-          </button>
-          <button
-            onClick={() => handleReview('rejected')}
-            disabled={submitting}
-            className="bg-brass text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
-          >
-            반려
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={submitting}
-            className="ml-auto border border-line bg-paper-raised text-plum px-4 py-2 rounded disabled:opacity-50 hover:bg-slate-soft"
-          >
-            삭제
-          </button>
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleReview('approved')}
+              disabled={submitting}
+              className="bg-forest text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
+            >
+              승인
+            </button>
+            <button
+              onClick={() => handleReview('rejected')}
+              disabled={submitting}
+              className="bg-brass text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
+            >
+              반려
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={submitting}
+              className="ml-auto border border-line bg-paper-raised text-plum px-4 py-2 rounded disabled:opacity-50 hover:bg-slate-soft"
+            >
+              삭제
+            </button>
+          </div>
         </div>
       </div>
     </main>

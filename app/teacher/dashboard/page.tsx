@@ -104,61 +104,63 @@ export default function TeacherDashboardPage() {
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-baseline mb-6">
-        <div>
-          <p className="eyebrow mb-1">사서 데스크</p>
-          <h1 className="text-2xl">교사 대시보드</h1>
+    <main className="min-h-full flex items-center justify-center p-6">
+      <div className="w-full max-w-4xl">
+        <div className="flex justify-between items-baseline mb-6">
+          <div>
+            <p className="eyebrow mb-1">사서 데스크</p>
+            <h1 className="text-2xl">교사 대시보드</h1>
+          </div>
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
+          >
+            로그아웃
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
-        >
-          로그아웃
-        </button>
+        <div className="flex flex-wrap gap-2 mb-4 items-center">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+          >
+            <option value="">전체 상태</option>
+            <option value="submitted">제출됨</option>
+            <option value="approved">승인됨</option>
+            <option value="rejected">반려됨</option>
+          </select>
+          <select
+            value={classFilter}
+            onChange={(e) => setClassFilter(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+          >
+            <option value="">전체 학급</option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={handleResetClass}
+            disabled={!classFilter || resettingClass}
+            className="ml-auto text-sm bg-plum text-paper-raised px-3 py-2 rounded hover:opacity-90 disabled:opacity-50"
+            title={!classFilter ? '학급을 먼저 선택하세요' : undefined}
+          >
+            학급 초기화
+          </button>
+        </div>
+        {loading ? (
+          <p className="text-ink-soft">로딩 중...</p>
+        ) : (
+          <TeacherReportList
+            reports={reports}
+            onReportDeleted={handleReportDeleted}
+            onStudentDeleted={handleStudentDeleted}
+          />
+        )}
       </div>
-      <div className="flex flex-wrap gap-2 mb-4 items-center">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
-        >
-          <option value="">전체 상태</option>
-          <option value="submitted">제출됨</option>
-          <option value="approved">승인됨</option>
-          <option value="rejected">반려됨</option>
-        </select>
-        <select
-          value={classFilter}
-          onChange={(e) => setClassFilter(e.target.value)}
-          className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
-        >
-          <option value="">전체 학급</option>
-          {classes.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={handleResetClass}
-          disabled={!classFilter || resettingClass}
-          className="ml-auto text-sm bg-plum text-paper-raised px-3 py-2 rounded hover:opacity-90 disabled:opacity-50"
-          title={!classFilter ? '학급을 먼저 선택하세요' : undefined}
-        >
-          학급 초기화
-        </button>
-      </div>
-      {loading ? (
-        <p className="text-ink-soft">로딩 중...</p>
-      ) : (
-        <TeacherReportList
-          reports={reports}
-          onReportDeleted={handleReportDeleted}
-          onStudentDeleted={handleStudentDeleted}
-        />
-      )}
     </main>
   );
 }
