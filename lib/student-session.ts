@@ -1,0 +1,22 @@
+import { Student } from './types';
+
+const STORAGE_KEY = 'book-report-student';
+
+export function saveStudent(student: Student): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(student));
+  }
+}
+
+export function getStudent(): Student | null {
+  if (typeof window === 'undefined') return null;
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+  return JSON.parse(raw) as Student;
+}
+
+export function clearStudent(): void {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
