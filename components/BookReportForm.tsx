@@ -53,15 +53,15 @@ export function BookReportForm({
       {initialData?.status === 'rejected' && initialData?.teacher_comment && (
         <div className="border border-plum bg-plum-soft p-3 rounded text-plum">
           <p className="font-medium">선생님 말씀</p>
-          <p className="text-sm mt-1">{initialData.teacher_comment}</p>
+          <p className="text-base mt-1">{initialData.teacher_comment}</p>
         </div>
       )}
       {error && (
-        <div className="border border-plum bg-plum-soft p-3 rounded text-plum text-sm">
+        <div className="border border-plum bg-plum-soft p-3 rounded text-plum text-base">
           {error}
         </div>
       )}
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         책 제목
         <input
           placeholder="예: 어린 왕자"
@@ -72,7 +72,7 @@ export function BookReportForm({
           disabled={saving}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         지은이
         <input
           placeholder="예: 생텍쥐페리"
@@ -82,10 +82,10 @@ export function BookReportForm({
           disabled={saving}
         />
       </label>
-      <div className="flex flex-col gap-1 text-sm text-ink-soft">
+      <div className="flex flex-col gap-1 text-base text-ink-soft">
         <div className="flex items-center gap-2">
           무엇을 써볼까요?
-          <span className="text-xs bg-forest text-paper-raised rounded-full px-2 py-0.5">
+          <span className="text-sm bg-forest text-paper-raised rounded-full px-2 py-0.5">
             중복 체크 가능!
           </span>
         </div>
@@ -104,7 +104,7 @@ export function BookReportForm({
           ))}
         </div>
       </div>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         내용
         <textarea
           placeholder="위에서 고른 것들에 대해 자유롭게 써 보세요."
@@ -133,7 +133,7 @@ export function BookReportForm({
           type="button"
           disabled={saving}
           onClick={onCancel}
-          className="ml-auto text-sm text-ink-soft hover:underline disabled:opacity-50"
+          className="ml-auto text-base text-ink-soft hover:underline disabled:opacity-50"
         >
           취소
         </button>

@@ -23,12 +23,12 @@ export function BookReportList({
         >
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{report.title}</p>
-            <p className="text-xs text-ink-soft mt-1">
+            <p className="text-sm text-ink-soft mt-1">
               {formatDate(report.submitted_at ?? report.created_at)}
               {report.submitted_at ? ' 제출' : ' 작성'}
             </p>
             {report.status === 'rejected' && report.teacher_comment && (
-              <p className="text-sm text-plum mt-1">
+              <p className="text-base text-plum mt-1">
                 선생님 말씀: {report.teacher_comment}
               </p>
             )}

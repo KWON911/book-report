@@ -60,12 +60,12 @@ export function StudentIdentifyForm({
         <p className="eyebrow mb-1">독서카드 작성</p>
         <h1 className="text-2xl">독서록 시작하기</h1>
       </div>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         학급
         {classesLoading ? (
-          <p className="text-sm text-ink-soft py-2">학급 목록을 불러오는 중...</p>
+          <p className="text-base text-ink-soft py-2">학급 목록을 불러오는 중...</p>
         ) : classes.length === 0 ? (
-          <p className="text-sm text-plum py-2">
+          <p className="text-base text-plum py-2">
             아직 등록된 학급이 없어요. 선생님께 학급 등록을 요청해주세요.
           </p>
         ) : (
@@ -87,7 +87,7 @@ export function StudentIdentifyForm({
           </select>
         )}
       </label>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         번호
         <input
           placeholder="예: 5"
@@ -99,7 +99,7 @@ export function StudentIdentifyForm({
           disabled={loading}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+      <label className="flex flex-col gap-1 text-base text-ink-soft">
         이름
         <input
           placeholder="예: 홍길동"
@@ -110,7 +110,7 @@ export function StudentIdentifyForm({
           disabled={loading}
         />
       </label>
-      {error && <p className="text-plum text-sm">{error}</p>}
+      {error && <p className="text-plum text-base">{error}</p>}
       <button
         type="submit"
         className="bg-forest text-paper-raised py-2 rounded disabled:opacity-50 hover:opacity-90"

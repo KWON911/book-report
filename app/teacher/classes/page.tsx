@@ -89,7 +89,7 @@ export default function TeacherClassesPage() {
       <div className="w-full max-w-md">
         <button
           onClick={() => router.push('/teacher/dashboard')}
-          className="text-sm text-ink-soft mb-4 hover:underline"
+          className="text-base text-ink-soft mb-4 hover:underline"
         >
           &lt; 대시보드로
         </button>
@@ -113,9 +113,9 @@ export default function TeacherClassesPage() {
             추가
           </button>
         </form>
-        {error && <p className="text-plum text-sm mb-4">{error}</p>}
+        {error && <p className="text-plum text-base mb-4">{error}</p>}
         {notice && (
-          <p className="text-sm mb-4 border border-line bg-paper-raised rounded px-3 py-2">
+          <p className="text-base mb-4 border border-line bg-paper-raised rounded px-3 py-2">
             {notice}
           </p>
         )}
@@ -129,7 +129,7 @@ export default function TeacherClassesPage() {
             {classes.map((c) => (
               <li
                 key={c.id}
-                className="px-4 py-3 text-sm flex justify-between items-center cursor-pointer hover:bg-slate-soft"
+                className="px-4 py-3 text-base flex justify-between items-center cursor-pointer hover:bg-slate-soft"
                 onClick={() => router.push(`/teacher/classes/${c.id}`)}
               >
                 <span>{c.name}</span>

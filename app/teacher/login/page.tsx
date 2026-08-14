@@ -40,7 +40,7 @@ export default function TeacherLoginPage() {
           <p className="eyebrow mb-1">선생님 전용</p>
           <h1 className="text-2xl">교사 로그인</h1>
         </div>
-        <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        <label className="flex flex-col gap-1 text-base text-ink-soft">
           비밀번호
           <input
             type="password"
@@ -52,7 +52,7 @@ export default function TeacherLoginPage() {
             disabled={loading}
           />
         </label>
-        {error && <p className="text-plum text-sm">{error}</p>}
+        {error && <p className="text-plum text-base">{error}</p>}
         <button
           type="submit"
           className="bg-forest text-paper-raised py-2 rounded disabled:opacity-50 hover:opacity-90"

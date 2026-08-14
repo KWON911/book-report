@@ -119,14 +119,14 @@ export default function TeacherDashboardPage() {
           <div className="flex gap-2">
             <button
               onClick={() => router.push('/teacher/classes')}
-              className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft"
+              className="text-base border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft"
             >
               학급 관리
             </button>
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="text-sm border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
+              className="text-base border border-line bg-paper-raised text-ink px-3 py-1.5 rounded hover:bg-slate-soft disabled:opacity-50"
             >
               로그아웃
             </button>

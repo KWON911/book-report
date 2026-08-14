@@ -50,14 +50,14 @@ export default function StudentHomePage() {
               clearStudent();
               setStudent(null);
             }}
-            className="text-sm text-ink-soft hover:underline"
+            className="text-base text-ink-soft hover:underline"
           >
             다른 학생으로 전환
           </button>
         </div>
         <button
           onClick={() => router.push('/reports/new')}
-          className="bg-forest text-paper-raised px-4 py-2 rounded mb-6 hover:opacity-90"
+          className="bg-forest text-paper-raised px-4 py-2 rounded mb-6 text-lg hover:opacity-90"
         >
           + 새 독서록 작성
         </button>

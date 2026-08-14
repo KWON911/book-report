@@ -41,7 +41,7 @@ export function ConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-medium mb-2">{title}</h2>
-        <p className="text-sm text-ink-soft whitespace-pre-line mb-4">{message}</p>
+        <p className="text-base text-ink-soft whitespace-pre-line mb-4">{message}</p>
         {requireText && (
           <input
             autoFocus

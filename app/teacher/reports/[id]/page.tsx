@@ -85,7 +85,7 @@ export default function TeacherReportDetailPage({
       <div className="w-full max-w-2xl">
         <button
           onClick={() => router.push('/teacher/dashboard')}
-          className="text-sm text-ink-soft mb-4 hover:underline"
+          className="text-base text-ink-soft mb-4 hover:underline"
         >
           &lt; 목록으로
         </button>
@@ -93,12 +93,12 @@ export default function TeacherReportDetailPage({
           <h1 className="text-2xl">{report.title}</h1>
           <StatusStamp status={report.status} />
         </div>
-        <p className="text-xs text-ink-soft mb-4">
+        <p className="text-sm text-ink-soft mb-4">
           {formatDate(report.submitted_at ?? report.created_at)}
           {report.submitted_at ? ' 제출' : ' 작성'}
         </p>
         <div className="card space-y-3 mb-5 p-4">
-          <p className="text-sm">
+          <p className="text-base">
             <span className="eyebrow mr-1">지은이</span> {report.author || '없음'}
           </p>
           {report.categories && report.categories.length > 0 && (
@@ -106,7 +106,7 @@ export default function TeacherReportDetailPage({
               {report.categories.map((c) => (
                 <span
                   key={c}
-                  className="text-xs bg-forest-soft text-forest rounded-full px-2 py-0.5"
+                  className="text-sm bg-forest-soft text-forest rounded-full px-2 py-0.5"
                 >
                   {c}
                 </span>
@@ -115,10 +115,10 @@ export default function TeacherReportDetailPage({
           )}
           <div>
             <p className="eyebrow mb-1">내용</p>
-            <p className="whitespace-pre-wrap text-sm">{report.content || '없음'}</p>
+            <p className="whitespace-pre-wrap text-base">{report.content || '없음'}</p>
           </div>
         </div>
-        {error && <p className="text-plum text-sm mb-3">{error}</p>}
+        {error && <p className="text-plum text-base mb-3">{error}</p>}
         <div className="space-y-3">
           <textarea
             placeholder="코멘트 (반려 시 사유 입력)"

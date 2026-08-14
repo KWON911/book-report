@@ -74,13 +74,13 @@ export default function TeacherClassDetailPage({
       <div className="w-full max-w-md">
         <button
           onClick={() => router.push('/teacher/classes')}
-          className="text-sm text-ink-soft mb-4 hover:underline"
+          className="text-base text-ink-soft mb-4 hover:underline"
         >
           &lt; 학급 관리로
         </button>
         <p className="eyebrow mb-1">학생 명부</p>
         <h1 className="text-2xl mb-5">{className ?? '학급'}</h1>
-        {error && <p className="text-plum text-sm mb-4">{error}</p>}
+        {error && <p className="text-plum text-base mb-4">{error}</p>}
 
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
@@ -89,7 +89,7 @@ export default function TeacherClassDetailPage({
         ) : (
           <ul className="card divide-y divide-line">
             {students.map((s) => (
-              <li key={s.id} className="px-4 py-3 text-sm flex justify-between items-center">
+              <li key={s.id} className="px-4 py-3 text-base flex justify-between items-center">
                 <span>
                   {s.number}번 {s.name}
                 </span>
