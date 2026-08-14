@@ -132,11 +132,11 @@ export default function TeacherDashboardPage() {
             </button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4 items-center">
+        <div className="flex flex-nowrap gap-1.5 sm:gap-2 mb-4 items-center">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
           >
             <option value="">전체 상태</option>
             <option value="submitted">제출됨</option>
@@ -146,7 +146,7 @@ export default function TeacherDashboardPage() {
           <select
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
-            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
           >
             <option value="">전체 학급</option>
             {classes.map((c) => (
@@ -158,7 +158,7 @@ export default function TeacherDashboardPage() {
           <select
             value={studentFilter}
             onChange={(e) => setStudentFilter(e.target.value)}
-            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
             disabled={studentOptions.length === 0}
           >
             <option value="">전체 학생</option>
