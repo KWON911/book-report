@@ -81,7 +81,7 @@ export default function TeacherReportDetailPage({
   if (!report) return null;
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-2xl">
         <button
           onClick={() => router.push('/teacher/dashboard')}

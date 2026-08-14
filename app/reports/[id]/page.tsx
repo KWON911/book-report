@@ -47,7 +47,7 @@ export default function EditReportPage({
   if (loading || !report) return null;
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-2xl">
         <p className="eyebrow mb-1">독서카드 수정</p>
         <h1 className="text-2xl mb-5">독서록 수정</h1>

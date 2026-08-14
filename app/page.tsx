@@ -6,7 +6,7 @@ export default function StartPage() {
   const router = useRouter();
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-sm text-center">
         <p className="eyebrow mb-2">우리 반 독서록</p>
         <h1 className="text-4xl mb-10">독서록</h1>

@@ -85,7 +85,7 @@ export default function TeacherClassesPage() {
   }
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-md">
         <button
           onClick={() => router.push('/teacher/dashboard')}

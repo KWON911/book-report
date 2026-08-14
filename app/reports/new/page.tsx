@@ -39,7 +39,7 @@ export default function NewReportPage() {
   }
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-2xl">
         <p className="eyebrow mb-1">새 독서카드</p>
         <h1 className="text-2xl mb-5">새 독서록 작성</h1>

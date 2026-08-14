@@ -31,14 +31,14 @@ export default function StudentHomePage() {
 
   if (!student) {
     return (
-      <main className="min-h-full flex items-center justify-center p-6">
+      <main className="page-shell">
         <StudentIdentifyForm onIdentified={setStudent} />
       </main>
     );
   }
 
   return (
-    <main className="min-h-full flex items-center justify-center p-6">
+    <main className="page-shell">
       <div className="w-full max-w-2xl">
         <div className="flex justify-between items-baseline mb-6">
           <div>
