@@ -39,7 +39,8 @@ export function StudentIdentifyForm({
       });
 
       if (!res.ok) {
-        setError('입력을 확인해주세요.');
+        const data = await res.json().catch(() => ({}));
+        setError(data?.error ?? '입력을 확인해주세요.');
         setLoading(false);
         return;
       }

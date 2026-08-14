@@ -12,7 +12,7 @@ create table book_report_students (
   name text not null,
   class_id uuid not null references book_report_classes(id),
   number int not null,
-  unique (name, class_id, number)
+  unique (class_id, number)
 );
 
 create table book_report_entries (
