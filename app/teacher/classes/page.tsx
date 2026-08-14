@@ -76,7 +76,7 @@ export default function TeacherClassesPage() {
       }
       setClasses((prev) => prev.filter((c) => c.id !== pendingDelete.id));
       setNotice(`'${pendingDelete.name}' 학급이 삭제되었습니다.`);
-    } catch (err) {
+    } catch {
       setNotice('학급 삭제 중 오류가 발생했습니다.');
     } finally {
       setDeleting(false);

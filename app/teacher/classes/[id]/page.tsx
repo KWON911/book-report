@@ -62,7 +62,7 @@ export default function TeacherClassDetailPage({
       if (!res.ok) throw new Error('Failed to delete student');
       setStudents((prev) => prev.filter((s) => s.id !== pendingDelete.id));
       setPendingDelete(null);
-    } catch (err) {
+    } catch {
       setError('삭제 중 오류가 발생했습니다.');
     } finally {
       setDeleting(false);

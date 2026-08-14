@@ -39,7 +39,7 @@ export function BookReportForm({
     setError(null);
     try {
       await onSave({ title, author, categories, content }, status);
-    } catch (err) {
+    } catch {
       setError('저장 중 오류가 발생했습니다.');
       setSaving(false);
     }

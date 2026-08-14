@@ -48,7 +48,7 @@ export function StudentIdentifyForm({
       const { student } = await res.json();
       saveStudent(student);
       onIdentified(student);
-    } catch (err) {
+    } catch {
       setError('오류가 발생했습니다.');
       setLoading(false);
     }

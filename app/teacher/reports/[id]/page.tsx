@@ -51,7 +51,7 @@ export default function TeacherReportDetailPage({
       }
 
       router.push('/teacher/dashboard');
-    } catch (err) {
+    } catch {
       setError('검토 중 오류가 발생했습니다.');
       setSubmitting(false);
     }
@@ -70,7 +70,7 @@ export default function TeacherReportDetailPage({
       }
 
       router.push('/teacher/dashboard');
-    } catch (err) {
+    } catch {
       setError('삭제 중 오류가 발생했습니다.');
       setSubmitting(false);
       setConfirmingDelete(false);
