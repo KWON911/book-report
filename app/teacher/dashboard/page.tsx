@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 import { TeacherReportList } from '@/components/TeacherReportList';
@@ -16,7 +16,8 @@ export default function TeacherDashboardPage() {
   const [reports, setReports] = useState<TeacherReport[]>([]);
   const [statusFilter, setStatusFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
-  const [studentQuery, setStudentQuery] = useState('');
+  const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
+  const [dateSort, setDateSort] = useState<'asc' | 'desc'>('desc');
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -44,6 +45,7 @@ export default function TeacherDashboardPage() {
       })
       .then((data) => {
         setReports(data?.reports ?? []);
+        setSelectedStudentIds(new Set());
         setLoading(false);
       })
       .catch(() => {
@@ -65,12 +67,40 @@ export default function TeacherDashboardPage() {
     setReports((prev) => prev.filter((r) => r.id !== reportId));
   }
 
-  const query = studentQuery.trim();
-  const visibleReports = query
-    ? reports.filter(
-        (r) => r.student.name.includes(query) || String(r.student.number) === query
-      )
-    : reports;
+  function toggleStudent(studentId: string) {
+    setSelectedStudentIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(studentId)) {
+        next.delete(studentId);
+      } else {
+        next.add(studentId);
+      }
+      return next;
+    });
+  }
+
+  const studentOptions = useMemo(() => {
+    const byId = new Map<string, { id: string; name: string; number: number }>();
+    for (const r of reports) {
+      if (!byId.has(r.student.id)) {
+        byId.set(r.student.id, r.student);
+      }
+    }
+    return Array.from(byId.values()).sort((a, b) => a.number - b.number);
+  }, [reports]);
+
+  const visibleReports = useMemo(() => {
+    const filtered =
+      selectedStudentIds.size === 0
+        ? reports
+        : reports.filter((r) => selectedStudentIds.has(r.student.id));
+
+    return [...filtered].sort((a, b) => {
+      const aDate = new Date(a.submitted_at ?? a.created_at).getTime();
+      const bDate = new Date(b.submitted_at ?? b.created_at).getTime();
+      return dateSort === 'asc' ? aDate - bDate : bDate - aDate;
+    });
+  }, [reports, selectedStudentIds, dateSort]);
 
   return (
     <main className="min-h-full flex items-center justify-center p-6">
@@ -96,7 +126,7 @@ export default function TeacherDashboardPage() {
             </button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4 items-center">
+        <div className="flex flex-wrap gap-2 mb-3 items-center">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -119,17 +149,43 @@ export default function TeacherDashboardPage() {
               </option>
             ))}
           </select>
-          <input
-            value={studentQuery}
-            onChange={(e) => setStudentQuery(e.target.value)}
-            placeholder="이름 또는 번호로 찾기"
-            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
-          />
         </div>
+        {studentOptions.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 items-center card p-3">
+            <span className="eyebrow">학생</span>
+            {studentOptions.map((s) => (
+              <label
+                key={s.id}
+                className="flex items-center gap-1.5 text-sm cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedStudentIds.has(s.id)}
+                  onChange={() => toggleStudent(s.id)}
+                  className="accent-forest"
+                />
+                {s.number}번 {s.name}
+              </label>
+            ))}
+            {selectedStudentIds.size > 0 && (
+              <button
+                onClick={() => setSelectedStudentIds(new Set())}
+                className="text-xs text-ink-soft hover:underline ml-auto"
+              >
+                선택 해제
+              </button>
+            )}
+          </div>
+        )}
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
         ) : (
-          <TeacherReportList reports={visibleReports} onReportDeleted={handleReportDeleted} />
+          <TeacherReportList
+            reports={visibleReports}
+            onReportDeleted={handleReportDeleted}
+            dateSort={dateSort}
+            onToggleDateSort={() => setDateSort((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+          />
         )}
       </div>
     </main>

@@ -13,9 +13,13 @@ type TeacherReport = BookReport & {
 export function TeacherReportList({
   reports,
   onReportDeleted,
+  dateSort,
+  onToggleDateSort,
 }: {
   reports: TeacherReport[];
   onReportDeleted: (reportId: string) => void;
+  dateSort: 'asc' | 'desc';
+  onToggleDateSort: () => void;
 }) {
   const router = useRouter();
 
@@ -46,7 +50,14 @@ export function TeacherReportList({
             <th className="p-3 eyebrow font-medium">이름</th>
             <th className="p-3 eyebrow font-medium">번호</th>
             <th className="p-3 eyebrow font-medium">제목</th>
-            <th className="p-3 eyebrow font-medium">날짜</th>
+            <th className="p-3 eyebrow font-medium">
+              <button
+                onClick={onToggleDateSort}
+                className="flex items-center gap-1 hover:text-ink"
+              >
+                날짜 {dateSort === 'asc' ? '↑' : '↓'}
+              </button>
+            </th>
             <th className="p-3 eyebrow font-medium">상태</th>
             <th className="p-3 eyebrow font-medium"></th>
           </tr>
