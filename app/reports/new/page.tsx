@@ -14,7 +14,7 @@ export default function NewReportPage() {
     const s = getStudent();
     setStudent(s);
     if (!s) {
-      router.push('/');
+      router.push('/student');
     }
   }, [router]);
 
@@ -35,7 +35,7 @@ export default function NewReportPage() {
       throw new Error('Failed to save report');
     }
 
-    router.push('/');
+    router.push('/student');
   }
 
   return (

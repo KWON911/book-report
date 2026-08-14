@@ -24,7 +24,7 @@ export default function EditReportPage({
       })
       .catch(() => {
         setLoading(false);
-        router.push('/');
+        router.push('/student');
       });
   }, [id, router]);
 
@@ -41,7 +41,7 @@ export default function EditReportPage({
       throw new Error('Failed to save report');
     }
 
-    router.push('/');
+    router.push('/student');
   }
 
   if (loading || !report) return null;
