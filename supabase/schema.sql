@@ -57,6 +57,8 @@ create policy "anon can select book_report_classes" on book_report_classes
   for select to anon using (true);
 create policy "anon can insert book_report_classes" on book_report_classes
   for insert to anon with check (true);
+create policy "anon can delete book_report_classes" on book_report_classes
+  for delete to anon using (true);
 
 create policy "anon can select book_report_students" on book_report_students
   for select to anon using (true);

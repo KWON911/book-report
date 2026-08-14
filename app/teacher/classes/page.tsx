@@ -14,8 +14,8 @@ export default function TeacherClassesPage() {
   const [newName, setNewName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const [pendingReset, setPendingReset] = useState<ClassOption | null>(null);
-  const [resetting, setResetting] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<ClassOption | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
   function loadClasses() {
@@ -59,27 +59,28 @@ export default function TeacherClassesPage() {
     }
   }
 
-  async function handleConfirmReset() {
-    if (!pendingReset) return;
-    setResetting(true);
+  async function handleConfirmDelete() {
+    if (!pendingDelete) return;
+    setDeleting(true);
     setNotice(null);
 
     try {
-      const res = await fetch(`/api/teacher/classes/${pendingReset.id}`, {
+      const res = await fetch(`/api/teacher/classes/${pendingDelete.id}`, {
         method: 'DELETE',
-        body: JSON.stringify({ confirmName: pendingReset.name }),
+        body: JSON.stringify({ confirmName: pendingDelete.name }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setNotice(data?.error ?? '학급 초기화 중 오류가 발생했습니다.');
+        setNotice(data?.error ?? '학급 삭제 중 오류가 발생했습니다.');
         return;
       }
-      setNotice(`'${pendingReset.name}' 학급이 초기화되었습니다.`);
+      setClasses((prev) => prev.filter((c) => c.id !== pendingDelete.id));
+      setNotice(`'${pendingDelete.name}' 학급이 삭제되었습니다.`);
     } catch (err) {
-      setNotice('학급 초기화 중 오류가 발생했습니다.');
+      setNotice('학급 삭제 중 오류가 발생했습니다.');
     } finally {
-      setResetting(false);
-      setPendingReset(null);
+      setDeleting(false);
+      setPendingDelete(null);
     }
   }
 
@@ -136,9 +137,9 @@ export default function TeacherClassesPage() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setNotice(null);
-                    setPendingReset(c);
+                    setPendingDelete(c);
                   }}
-                  title="학급 초기화"
+                  title="학급 삭제"
                   className="text-plum hover:opacity-70 p-1"
                 >
                   <TrashIcon />
@@ -150,14 +151,14 @@ export default function TeacherClassesPage() {
       </div>
 
       <ConfirmDialog
-        open={pendingReset !== null}
-        title="학급 초기화"
-        message={`'${pendingReset?.name}' 학급의 모든 학생과 독서록이 삭제됩니다. 되돌릴 수 없어요.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`}
-        confirmLabel="초기화"
-        requireText={pendingReset?.name}
-        submitting={resetting}
-        onConfirm={handleConfirmReset}
-        onCancel={() => setPendingReset(null)}
+        open={pendingDelete !== null}
+        title="학급 삭제"
+        message={`'${pendingDelete?.name}' 학급과 소속된 모든 학생, 독서록이 삭제됩니다. 되돌릴 수 없어요.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`}
+        confirmLabel="삭제"
+        requireText={pendingDelete?.name}
+        submitting={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setPendingDelete(null)}
       />
     </main>
   );

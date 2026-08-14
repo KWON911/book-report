@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import { supabaseClient } from '@/lib/supabase';
 import { verifyTeacherSession } from '@/lib/teacher-session';
 
-// Resets a class: deletes every student in it (and, via their reports,
-// all book reports) but keeps the class row itself so students can be
-// re-added under the same class name next term.
+// Deletes a class entirely: every student in it, their reports (via the
+// students), and the class row itself. Fully irreversible.
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -69,6 +68,16 @@ export async function DELETE(
       console.error('DELETE /api/teacher/classes/[id] (students) failed:', studentsError);
       return NextResponse.json({ error: 'Failed to delete class students' }, { status: 500 });
     }
+  }
+
+  const { error: classDeleteError } = await supabaseClient
+    .from('book_report_classes')
+    .delete()
+    .eq('id', id);
+
+  if (classDeleteError) {
+    console.error('DELETE /api/teacher/classes/[id] (class) failed:', classDeleteError);
+    return NextResponse.json({ error: 'Failed to delete class' }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });
