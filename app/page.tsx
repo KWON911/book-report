@@ -42,7 +42,7 @@ export default function HomePage() {
       <div className="w-full max-w-2xl">
         <div className="flex justify-between items-baseline mb-6">
           <div>
-            <p className="eyebrow mb-1">대출카드</p>
+            <p className="eyebrow mb-1">독서카드</p>
             <h1 className="text-2xl">{student.name}님의 독서록</h1>
           </div>
           <button

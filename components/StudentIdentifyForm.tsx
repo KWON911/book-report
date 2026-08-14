@@ -56,7 +56,7 @@ export function StudentIdentifyForm({
   return (
     <form onSubmit={handleSubmit} className="card flex flex-col gap-4 max-w-sm p-6">
       <div>
-        <p className="eyebrow mb-1">대출카드 작성</p>
+        <p className="eyebrow mb-1">독서카드 작성</p>
         <h1 className="text-2xl">독서록 시작하기</h1>
       </div>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
