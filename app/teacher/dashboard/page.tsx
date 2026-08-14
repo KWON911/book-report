@@ -111,7 +111,7 @@ export default function TeacherDashboardPage() {
       <div className="w-full max-w-4xl">
         <div className="flex justify-between items-baseline mb-6">
           <div>
-            <p className="eyebrow mb-1">사서 데스크</p>
+            <p className="eyebrow mb-1">선생님 화면</p>
             <h1 className="text-2xl">교사 대시보드</h1>
           </div>
           <div className="flex gap-2">

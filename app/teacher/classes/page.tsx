@@ -94,7 +94,7 @@ export default function TeacherClassesPage() {
         >
           &lt; 대시보드로
         </button>
-        <p className="eyebrow mb-1">학급 서가</p>
+        <p className="eyebrow mb-1">학급 목록</p>
         <h1 className="text-2xl mb-5">학급 관리</h1>
 
         <form onSubmit={handleCreate} className="card p-4 flex gap-2 mb-6">

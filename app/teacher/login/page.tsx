@@ -37,7 +37,7 @@ export default function TeacherLoginPage() {
     <main className="min-h-full flex justify-center items-center p-6">
       <form onSubmit={handleSubmit} className="card flex flex-col gap-4 max-w-sm w-full p-6">
         <div>
-          <p className="eyebrow mb-1">사서 열람</p>
+          <p className="eyebrow mb-1">선생님 전용</p>
           <h1 className="text-2xl">교사 로그인</h1>
         </div>
         <label className="flex flex-col gap-1 text-sm text-ink-soft">
