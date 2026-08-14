@@ -51,7 +51,11 @@ export default function EditReportPage({
       <div className="w-full max-w-2xl">
         <p className="eyebrow mb-1">독서카드 수정</p>
         <h1 className="text-2xl mb-5">독서록 수정</h1>
-        <BookReportForm initialData={report} onSave={handleSave} />
+        <BookReportForm
+          initialData={report}
+          onSave={handleSave}
+          onCancel={() => router.back()}
+        />
       </div>
     </main>
   );

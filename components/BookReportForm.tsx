@@ -7,6 +7,7 @@ import { REPORT_CATEGORIES } from '@/lib/report-categories';
 export function BookReportForm({
   initialData,
   onSave,
+  onCancel,
 }: {
   initialData?: Partial<BookReport>;
   onSave: (
@@ -18,6 +19,7 @@ export function BookReportForm({
     },
     status: 'draft' | 'submitted'
   ) => Promise<void>;
+  onCancel: () => void;
 }) {
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [author, setAuthor] = useState(initialData?.author ?? '');
@@ -126,6 +128,14 @@ export function BookReportForm({
           className="bg-forest text-paper-raised px-4 py-2 rounded disabled:opacity-50 hover:opacity-90"
         >
           제출하기
+        </button>
+        <button
+          type="button"
+          disabled={saving}
+          onClick={onCancel}
+          className="ml-auto text-sm text-ink-soft hover:underline disabled:opacity-50"
+        >
+          취소
         </button>
       </div>
     </div>
