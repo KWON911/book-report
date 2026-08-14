@@ -12,7 +12,7 @@ type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
 };
 
-type SortKey = 'date' | 'name';
+type SortKey = 'date' | 'name' | 'number';
 
 export function TeacherReportList({
   reports,
@@ -68,7 +68,11 @@ export function TeacherReportList({
         <thead>
           <tr className="border-b border-line text-left">
             <th className="p-3 eyebrow font-medium">학급</th>
-            <th className="p-3 eyebrow font-medium">번호</th>
+            <th className="p-3 eyebrow font-medium">
+              <button onClick={() => onSort('number')} className="flex items-center gap-1 hover:text-ink">
+                번호 {sortArrow('number')}
+              </button>
+            </th>
             <th className="p-3 eyebrow font-medium">
               <button onClick={() => onSort('name')} className="flex items-center gap-1 hover:text-ink">
                 이름 {sortArrow('name')}

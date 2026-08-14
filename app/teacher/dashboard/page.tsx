@@ -10,7 +10,7 @@ type TeacherReport = BookReport & {
 };
 
 type ClassOption = { id: string; name: string };
-type SortKey = 'date' | 'name';
+type SortKey = 'date' | 'name' | 'number';
 
 export default function TeacherDashboardPage() {
   const router = useRouter();
@@ -97,6 +97,8 @@ export default function TeacherDashboardPage() {
       let diff: number;
       if (sortKey === 'name') {
         diff = a.student.name.localeCompare(b.student.name, 'ko');
+      } else if (sortKey === 'number') {
+        diff = a.student.number - b.student.number;
       } else {
         const aDate = new Date(a.submitted_at ?? a.created_at).getTime();
         const bDate = new Date(b.submitted_at ?? b.created_at).getTime();
