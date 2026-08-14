@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
 import { TrashIcon } from '@/components/TrashIcon';
 import { formatDate } from '@/lib/format-date';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
@@ -26,23 +28,29 @@ export function TeacherReportList({
   onSort: (key: SortKey) => void;
 }) {
   const router = useRouter();
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   if (reports.length === 0) {
     return <p className="text-ink-soft">표시할 독서록이 없습니다.</p>;
   }
 
-  async function handleDeleteReport(e: React.MouseEvent, reportId: string) {
-    e.stopPropagation();
-    if (!confirm('이 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
+  async function handleConfirmDelete() {
+    if (!pendingDeleteId) return;
+    setDeleting(true);
+    setDeleteError(null);
 
-    const res = await fetch(`/api/teacher/book-reports/${reportId}`, {
+    const res = await fetch(`/api/teacher/book-reports/${pendingDeleteId}`, {
       method: 'DELETE',
     });
     if (res.ok) {
-      onReportDeleted(reportId);
+      onReportDeleted(pendingDeleteId);
+      setPendingDeleteId(null);
     } else {
-      alert('삭제 중 오류가 발생했습니다.');
+      setDeleteError('삭제 중 오류가 발생했습니다.');
     }
+    setDeleting(false);
   }
 
   function sortArrow(key: SortKey) {
@@ -55,6 +63,7 @@ export function TeacherReportList({
 
   return (
     <div className="card overflow-x-auto">
+      {deleteError && <p className="text-plum text-sm p-3 border-b border-line">{deleteError}</p>}
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-line text-left">
@@ -94,7 +103,11 @@ export function TeacherReportList({
               </td>
               <td className="p-3 text-sm whitespace-nowrap">
                 <button
-                  onClick={(e) => handleDeleteReport(e, report.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteError(null);
+                    setPendingDeleteId(report.id);
+                  }}
                   title="독서록 삭제"
                   className="text-plum hover:opacity-70 p-1"
                 >
@@ -105,6 +118,15 @@ export function TeacherReportList({
           ))}
         </tbody>
       </table>
+
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="독서록 삭제"
+        message="이 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다."
+        submitting={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </div>
   );
 }

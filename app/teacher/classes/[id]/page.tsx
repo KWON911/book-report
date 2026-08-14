@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TrashIcon } from '@/components/TrashIcon';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 type ClassOption = { id: string; name: string };
 type StudentRow = { id: string; name: string; number: number };
@@ -17,7 +18,9 @@ export default function TeacherClassDetailPage({
   const [className, setClassName] = useState<string | null>(null);
   const [students, setStudents] = useState<StudentRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<StudentRow | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function load() {
     setLoading(true);
@@ -48,25 +51,21 @@ export default function TeacherClassDetailPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  async function handleDeleteStudent(studentId: string, studentName: string) {
-    if (
-      !confirm(
-        `'${studentName}' 학생과 이 학생이 작성한 모든 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다.`
-      )
-    )
-      return;
-
-    setDeletingId(studentId);
+  async function handleConfirmDelete() {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    setError(null);
     try {
-      const res = await fetch(`/api/teacher/students/${studentId}`, {
+      const res = await fetch(`/api/teacher/students/${pendingDelete.id}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete student');
-      setStudents((prev) => prev.filter((s) => s.id !== studentId));
+      setStudents((prev) => prev.filter((s) => s.id !== pendingDelete.id));
+      setPendingDelete(null);
     } catch (err) {
-      alert('삭제 중 오류가 발생했습니다.');
+      setError('삭제 중 오류가 발생했습니다.');
     } finally {
-      setDeletingId(null);
+      setDeleting(false);
     }
   }
 
@@ -81,6 +80,7 @@ export default function TeacherClassDetailPage({
         </button>
         <p className="eyebrow mb-1">학생 명부</p>
         <h1 className="text-2xl mb-5">{className ?? '학급'}</h1>
+        {error && <p className="text-plum text-sm mb-4">{error}</p>}
 
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
@@ -94,10 +94,12 @@ export default function TeacherClassDetailPage({
                   {s.number}번 {s.name}
                 </span>
                 <button
-                  onClick={() => handleDeleteStudent(s.id, s.name)}
-                  disabled={deletingId === s.id}
+                  onClick={() => {
+                    setError(null);
+                    setPendingDelete(s);
+                  }}
                   title="학생 삭제"
-                  className="text-plum hover:opacity-70 p-1 disabled:opacity-50"
+                  className="text-plum hover:opacity-70 p-1"
                 >
                   <TrashIcon />
                 </button>
@@ -106,6 +108,15 @@ export default function TeacherClassDetailPage({
           </ul>
         )}
       </div>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="학생 삭제"
+        message={`'${pendingDelete?.name}' 학생과 이 학생이 작성한 모든 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다.`}
+        submitting={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </main>
   );
 }

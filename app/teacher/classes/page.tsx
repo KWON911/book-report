@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TrashIcon } from '@/components/TrashIcon';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 type ClassOption = { id: string; name: string };
 
@@ -13,7 +14,9 @@ export default function TeacherClassesPage() {
   const [newName, setNewName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const [resettingId, setResettingId] = useState<string | null>(null);
+  const [pendingReset, setPendingReset] = useState<ClassOption | null>(null);
+  const [resetting, setResetting] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   function loadClasses() {
     setLoading(true);
@@ -56,32 +59,27 @@ export default function TeacherClassesPage() {
     }
   }
 
-  async function handleReset(e: React.MouseEvent, cls: ClassOption) {
-    e.stopPropagation();
+  async function handleConfirmReset() {
+    if (!pendingReset) return;
+    setResetting(true);
+    setNotice(null);
 
-    const typed = prompt(
-      `'${cls.name}' 학급의 모든 학생과 독서록이 삭제됩니다. 되돌릴 수 없습니다.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`
-    );
-    if (typed === null) return;
-    if (typed !== cls.name) {
-      alert('입력한 학급 이름이 일치하지 않아 취소되었습니다.');
-      return;
-    }
-
-    setResettingId(cls.id);
     try {
-      const res = await fetch(`/api/teacher/classes/${cls.id}`, {
+      const res = await fetch(`/api/teacher/classes/${pendingReset.id}`, {
         method: 'DELETE',
-        body: JSON.stringify({ confirmName: typed }),
+        body: JSON.stringify({ confirmName: pendingReset.name }),
       });
       if (!res.ok) {
-        throw new Error('Failed to reset class');
+        const data = await res.json().catch(() => ({}));
+        setNotice(data?.error ?? '학급 초기화 중 오류가 발생했습니다.');
+        return;
       }
-      alert('학급이 초기화되었습니다.');
+      setNotice(`'${pendingReset.name}' 학급이 초기화되었습니다.`);
     } catch (err) {
-      alert('학급 초기화 중 오류가 발생했습니다.');
+      setNotice('학급 초기화 중 오류가 발생했습니다.');
     } finally {
-      setResettingId(null);
+      setResetting(false);
+      setPendingReset(null);
     }
   }
 
@@ -115,6 +113,11 @@ export default function TeacherClassesPage() {
           </button>
         </form>
         {error && <p className="text-plum text-sm mb-4">{error}</p>}
+        {notice && (
+          <p className="text-sm mb-4 border border-line bg-paper-raised rounded px-3 py-2">
+            {notice}
+          </p>
+        )}
 
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
@@ -130,10 +133,13 @@ export default function TeacherClassesPage() {
               >
                 <span>{c.name}</span>
                 <button
-                  onClick={(e) => handleReset(e, c)}
-                  disabled={resettingId === c.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setNotice(null);
+                    setPendingReset(c);
+                  }}
                   title="학급 초기화"
-                  className="text-plum hover:opacity-70 p-1 disabled:opacity-50"
+                  className="text-plum hover:opacity-70 p-1"
                 >
                   <TrashIcon />
                 </button>
@@ -142,6 +148,17 @@ export default function TeacherClassesPage() {
           </ul>
         )}
       </div>
+
+      <ConfirmDialog
+        open={pendingReset !== null}
+        title="학급 초기화"
+        message={`'${pendingReset?.name}' 학급의 모든 학생과 독서록이 삭제됩니다. 되돌릴 수 없어요.\n정말 진행하려면 학급 이름을 정확히 입력하세요.`}
+        confirmLabel="초기화"
+        requireText={pendingReset?.name}
+        submitting={resetting}
+        onConfirm={handleConfirmReset}
+        onCancel={() => setPendingReset(null)}
+      />
     </main>
   );
 }

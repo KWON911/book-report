@@ -6,6 +6,7 @@ import { BookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
 import { TrashIcon } from '@/components/TrashIcon';
 import { formatDate } from '@/lib/format-date';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 export default function TeacherReportDetailPage({
   params,
@@ -18,6 +19,8 @@ export default function TeacherReportDetailPage({
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
     fetch(`/api/book-reports/${id}`)
@@ -35,6 +38,7 @@ export default function TeacherReportDetailPage({
   async function handleReview(decision: 'approved' | 'rejected') {
     if (!report) return;
     setSubmitting(true);
+    setError(null);
 
     try {
       const res = await fetch(`/api/teacher/book-reports/${id}/review`, {
@@ -48,16 +52,14 @@ export default function TeacherReportDetailPage({
 
       router.push('/teacher/dashboard');
     } catch (err) {
-      alert('검토 중 오류가 발생했습니다.');
+      setError('검토 중 오류가 발생했습니다.');
       setSubmitting(false);
     }
   }
 
-  async function handleDelete() {
-    if (!report) return;
-    if (!confirm('이 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
-
+  async function handleConfirmDelete() {
     setSubmitting(true);
+    setError(null);
     try {
       const res = await fetch(`/api/teacher/book-reports/${id}`, {
         method: 'DELETE',
@@ -69,8 +71,9 @@ export default function TeacherReportDetailPage({
 
       router.push('/teacher/dashboard');
     } catch (err) {
-      alert('삭제 중 오류가 발생했습니다.');
+      setError('삭제 중 오류가 발생했습니다.');
       setSubmitting(false);
+      setConfirmingDelete(false);
     }
   }
 
@@ -107,6 +110,7 @@ export default function TeacherReportDetailPage({
             <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
           </div>
         </div>
+        {error && <p className="text-plum text-sm mb-3">{error}</p>}
         <div className="space-y-3">
           <textarea
             placeholder="코멘트 (반려 시 사유 입력)"
@@ -131,7 +135,7 @@ export default function TeacherReportDetailPage({
               반려
             </button>
             <button
-              onClick={handleDelete}
+              onClick={() => setConfirmingDelete(true)}
               disabled={submitting}
               title="독서록 삭제"
               className="ml-auto border border-line bg-paper-raised text-plum p-2 rounded disabled:opacity-50 hover:bg-slate-soft"
@@ -141,6 +145,15 @@ export default function TeacherReportDetailPage({
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="독서록 삭제"
+        message="이 독서록을 삭제하시겠습니까? 되돌릴 수 없습니다."
+        submitting={submitting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </main>
   );
 }
