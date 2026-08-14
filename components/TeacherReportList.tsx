@@ -64,27 +64,27 @@ export function TeacherReportList({
   return (
     <div className="card overflow-x-auto">
       {deleteError && <p className="text-plum text-sm p-3 border-b border-line">{deleteError}</p>}
-      <table className="w-full border-collapse">
+      <table className="w-full min-w-[720px] border-collapse">
         <thead>
           <tr className="border-b border-line text-left">
-            <th className="p-3 eyebrow font-medium">학급</th>
-            <th className="p-3 eyebrow font-medium">
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">학급</th>
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">
               <button onClick={() => onSort('number')} className="flex items-center gap-1 hover:text-ink">
                 번호 {sortArrow('number')}
               </button>
             </th>
-            <th className="p-3 eyebrow font-medium">
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">
               <button onClick={() => onSort('name')} className="flex items-center gap-1 hover:text-ink">
                 이름 {sortArrow('name')}
               </button>
             </th>
-            <th className="p-3 eyebrow font-medium">제목</th>
-            <th className="p-3 eyebrow font-medium">
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">제목</th>
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">
               <button onClick={() => onSort('date')} className="flex items-center gap-1 hover:text-ink">
                 날짜 {sortArrow('date')}
               </button>
             </th>
-            <th className="p-3 eyebrow font-medium">상태</th>
+            <th className="p-3 eyebrow font-medium whitespace-nowrap">상태</th>
             <th className="p-3 eyebrow font-medium"></th>
           </tr>
         </thead>
@@ -95,14 +95,14 @@ export function TeacherReportList({
               className="border-b border-line last:border-0 cursor-pointer hover:bg-slate-soft"
               onClick={() => router.push(`/teacher/reports/${report.id}`)}
             >
-              <td className="p-3 text-sm">{report.student.class.name}</td>
-              <td className="p-3 text-sm">{report.student.number}</td>
-              <td className="p-3 text-sm">{report.student.name}</td>
-              <td className="p-3 text-sm">{report.title}</td>
+              <td className="p-3 text-sm whitespace-nowrap">{report.student.class.name}</td>
+              <td className="p-3 text-sm whitespace-nowrap">{report.student.number}</td>
+              <td className="p-3 text-sm whitespace-nowrap">{report.student.name}</td>
+              <td className="p-3 text-sm max-w-[160px] truncate">{report.title}</td>
               <td className="p-3 text-sm whitespace-nowrap">
                 {formatDate(report.submitted_at ?? report.created_at)}
               </td>
-              <td className="p-3 text-sm">
+              <td className="p-3 text-sm whitespace-nowrap">
                 <StatusStamp status={report.status} />
               </td>
               <td className="p-3 text-sm whitespace-nowrap">
