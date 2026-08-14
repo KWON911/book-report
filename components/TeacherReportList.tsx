@@ -10,16 +10,20 @@ type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
 };
 
+type SortKey = 'date' | 'name';
+
 export function TeacherReportList({
   reports,
   onReportDeleted,
-  dateSort,
-  onToggleDateSort,
+  sortKey,
+  sortOrder,
+  onSort,
 }: {
   reports: TeacherReport[];
   onReportDeleted: (reportId: string) => void;
-  dateSort: 'asc' | 'desc';
-  onToggleDateSort: () => void;
+  sortKey: SortKey;
+  sortOrder: 'asc' | 'desc';
+  onSort: (key: SortKey) => void;
 }) {
   const router = useRouter();
 
@@ -41,21 +45,26 @@ export function TeacherReportList({
     }
   }
 
+  function sortArrow(key: SortKey) {
+    return sortKey === key ? (sortOrder === 'asc' ? '↑' : '↓') : '';
+  }
+
   return (
     <div className="card overflow-x-auto">
       <table className="w-full border-collapse">
         <thead>
           <tr className="border-b border-line text-left">
             <th className="p-3 eyebrow font-medium">학급</th>
-            <th className="p-3 eyebrow font-medium">이름</th>
+            <th className="p-3 eyebrow font-medium">
+              <button onClick={() => onSort('name')} className="flex items-center gap-1 hover:text-ink">
+                이름 {sortArrow('name')}
+              </button>
+            </th>
             <th className="p-3 eyebrow font-medium">번호</th>
             <th className="p-3 eyebrow font-medium">제목</th>
             <th className="p-3 eyebrow font-medium">
-              <button
-                onClick={onToggleDateSort}
-                className="flex items-center gap-1 hover:text-ink"
-              >
-                날짜 {dateSort === 'asc' ? '↑' : '↓'}
+              <button onClick={() => onSort('date')} className="flex items-center gap-1 hover:text-ink">
+                날짜 {sortArrow('date')}
               </button>
             </th>
             <th className="p-3 eyebrow font-medium">상태</th>

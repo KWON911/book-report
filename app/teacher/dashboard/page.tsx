@@ -10,14 +10,16 @@ type TeacherReport = BookReport & {
 };
 
 type ClassOption = { id: string; name: string };
+type SortKey = 'date' | 'name';
 
 export default function TeacherDashboardPage() {
   const router = useRouter();
   const [reports, setReports] = useState<TeacherReport[]>([]);
   const [statusFilter, setStatusFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
-  const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
-  const [dateSort, setDateSort] = useState<'asc' | 'desc'>('desc');
+  const [studentFilter, setStudentFilter] = useState('');
+  const [sortKey, setSortKey] = useState<SortKey>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -45,7 +47,7 @@ export default function TeacherDashboardPage() {
       })
       .then((data) => {
         setReports(data?.reports ?? []);
-        setSelectedStudentIds(new Set());
+        setStudentFilter('');
         setLoading(false);
       })
       .catch(() => {
@@ -67,16 +69,13 @@ export default function TeacherDashboardPage() {
     setReports((prev) => prev.filter((r) => r.id !== reportId));
   }
 
-  function toggleStudent(studentId: string) {
-    setSelectedStudentIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(studentId)) {
-        next.delete(studentId);
-      } else {
-        next.add(studentId);
-      }
-      return next;
-    });
+  function handleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
+    }
   }
 
   const studentOptions = useMemo(() => {
@@ -90,17 +89,22 @@ export default function TeacherDashboardPage() {
   }, [reports]);
 
   const visibleReports = useMemo(() => {
-    const filtered =
-      selectedStudentIds.size === 0
-        ? reports
-        : reports.filter((r) => selectedStudentIds.has(r.student.id));
+    const filtered = studentFilter
+      ? reports.filter((r) => r.student.id === studentFilter)
+      : reports;
 
     return [...filtered].sort((a, b) => {
-      const aDate = new Date(a.submitted_at ?? a.created_at).getTime();
-      const bDate = new Date(b.submitted_at ?? b.created_at).getTime();
-      return dateSort === 'asc' ? aDate - bDate : bDate - aDate;
+      let diff: number;
+      if (sortKey === 'name') {
+        diff = a.student.name.localeCompare(b.student.name, 'ko');
+      } else {
+        const aDate = new Date(a.submitted_at ?? a.created_at).getTime();
+        const bDate = new Date(b.submitted_at ?? b.created_at).getTime();
+        diff = aDate - bDate;
+      }
+      return sortOrder === 'asc' ? diff : -diff;
     });
-  }, [reports, selectedStudentIds, dateSort]);
+  }, [reports, studentFilter, sortKey, sortOrder]);
 
   return (
     <main className="min-h-full flex items-center justify-center p-6">
@@ -126,7 +130,7 @@ export default function TeacherDashboardPage() {
             </button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-3 items-center">
+        <div className="flex flex-wrap gap-2 mb-4 items-center">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -149,42 +153,29 @@ export default function TeacherDashboardPage() {
               </option>
             ))}
           </select>
-        </div>
-        {studentOptions.length > 0 && (
-          <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 items-center card p-3">
-            <span className="eyebrow">학생</span>
+          <select
+            value={studentFilter}
+            onChange={(e) => setStudentFilter(e.target.value)}
+            className="border border-line bg-paper-raised text-ink rounded px-3 py-2"
+            disabled={studentOptions.length === 0}
+          >
+            <option value="">전체 학생</option>
             {studentOptions.map((s) => (
-              <label
-                key={s.id}
-                className="flex items-center gap-1.5 text-sm cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedStudentIds.has(s.id)}
-                  onChange={() => toggleStudent(s.id)}
-                  className="accent-forest"
-                />
+              <option key={s.id} value={s.id}>
                 {s.number}번 {s.name}
-              </label>
+              </option>
             ))}
-            {selectedStudentIds.size > 0 && (
-              <button
-                onClick={() => setSelectedStudentIds(new Set())}
-                className="text-xs text-ink-soft hover:underline ml-auto"
-              >
-                선택 해제
-              </button>
-            )}
-          </div>
-        )}
+          </select>
+        </div>
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
         ) : (
           <TeacherReportList
             reports={visibleReports}
             onReportDeleted={handleReportDeleted}
-            dateSort={dateSort}
-            onToggleDateSort={() => setDateSort((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+            sortKey={sortKey}
+            sortOrder={sortOrder}
+            onSort={handleSort}
           />
         )}
       </div>
