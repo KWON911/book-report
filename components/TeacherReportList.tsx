@@ -46,7 +46,11 @@ export function TeacherReportList({
   }
 
   function sortArrow(key: SortKey) {
-    return sortKey === key ? (sortOrder === 'asc' ? '↑' : '↓') : '';
+    const active = sortKey === key;
+    const arrow = active && sortOrder === 'desc' ? '↓' : '↑';
+    return (
+      <span className={active ? 'text-ink' : 'text-ink-soft opacity-50'}>{arrow}</span>
+    );
   }
 
   return (
