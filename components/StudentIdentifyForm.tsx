@@ -60,17 +60,6 @@ export function StudentIdentifyForm({
         <h1 className="text-2xl">독서록 시작하기</h1>
       </div>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
-        이름
-        <input
-          placeholder="예: 홍길동"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
-          required
-          disabled={loading}
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
         학급
         {classesLoading ? (
           <p className="text-sm text-ink-soft py-2">학급 목록을 불러오는 중...</p>
@@ -104,6 +93,17 @@ export function StudentIdentifyForm({
           type="number"
           value={number}
           onChange={(e) => setNumber(e.target.value)}
+          className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
+          required
+          disabled={loading}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-ink-soft">
+        이름
+        <input
+          placeholder="예: 홍길동"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="border border-line bg-paper-raised text-ink rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-forest"
           required
           disabled={loading}
