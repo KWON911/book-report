@@ -10,8 +10,8 @@ export interface BookReport {
   student_id: string;
   title: string;
   author: string | null;
-  summary: string | null;
-  impression: string | null;
+  categories: string[] | null;
+  content: string | null;
   status: 'draft' | 'submitted' | 'approved' | 'rejected';
   teacher_comment: string | null;
   created_at: string;

@@ -101,13 +101,21 @@ export default function TeacherReportDetailPage({
           <p className="text-sm">
             <span className="eyebrow mr-1">지은이</span> {report.author || '없음'}
           </p>
+          {report.categories && report.categories.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {report.categories.map((c) => (
+                <span
+                  key={c}
+                  className="text-xs bg-forest-soft text-forest rounded-full px-2 py-0.5"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          )}
           <div>
-            <p className="eyebrow mb-1">줄거리</p>
-            <p className="whitespace-pre-wrap text-sm">{report.summary || '없음'}</p>
-          </div>
-          <div>
-            <p className="eyebrow mb-1">느낌/감상</p>
-            <p className="whitespace-pre-wrap text-sm">{report.impression || '없음'}</p>
+            <p className="eyebrow mb-1">내용</p>
+            <p className="whitespace-pre-wrap text-sm">{report.content || '없음'}</p>
           </div>
         </div>
         {error && <p className="text-plum text-sm mb-3">{error}</p>}

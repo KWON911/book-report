@@ -25,7 +25,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { student_id, title, author, summary, impression, status } = body;
+  const { student_id, title, author, categories, content, status } = body;
 
   if (!student_id || !title) {
     return NextResponse.json(
@@ -38,8 +38,8 @@ export async function POST(req: Request) {
     student_id,
     title,
     author: author ?? null,
-    summary: summary ?? null,
-    impression: impression ?? null,
+    categories: categories ?? null,
+    content: content ?? null,
     status: status ?? 'draft',
   };
 

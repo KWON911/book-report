@@ -29,7 +29,7 @@ export default function EditReportPage({
   }, [id, router]);
 
   async function handleSave(
-    data: { title: string; author: string; summary: string; impression: string },
+    data: { title: string; author: string; categories: string[]; content: string },
     status: 'draft' | 'submitted'
   ) {
     const res = await fetch(`/api/book-reports/${id}`, {

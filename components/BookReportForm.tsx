@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { BookReport } from '@/lib/types';
+import { REPORT_CATEGORIES } from '@/lib/report-categories';
 
 export function BookReportForm({
   initialData,
@@ -12,24 +13,30 @@ export function BookReportForm({
     data: {
       title: string;
       author: string;
-      summary: string;
-      impression: string;
+      categories: string[];
+      content: string;
     },
     status: 'draft' | 'submitted'
   ) => Promise<void>;
 }) {
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [author, setAuthor] = useState(initialData?.author ?? '');
-  const [summary, setSummary] = useState(initialData?.summary ?? '');
-  const [impression, setImpression] = useState(initialData?.impression ?? '');
+  const [categories, setCategories] = useState<string[]>(initialData?.categories ?? []);
+  const [content, setContent] = useState(initialData?.content ?? '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function toggleCategory(category: string) {
+    setCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  }
 
   async function handleSave(status: 'draft' | 'submitted') {
     setSaving(true);
     setError(null);
     try {
-      await onSave({ title, author, summary, impression }, status);
+      await onSave({ title, author, categories, content }, status);
     } catch (err) {
       setError('저장 중 오류가 발생했습니다.');
       setSaving(false);
@@ -73,23 +80,35 @@ export function BookReportForm({
           disabled={saving}
         />
       </label>
+      <div className="flex flex-col gap-1 text-sm text-ink-soft">
+        <div className="flex items-center gap-2">
+          무엇을 써볼까요?
+          <span className="text-xs bg-forest text-paper-raised rounded-full px-2 py-0.5">
+            중복 체크 가능!
+          </span>
+        </div>
+        <div className={`${inputClass} flex flex-wrap gap-x-4 gap-y-2`}>
+          {REPORT_CATEGORIES.map((category) => (
+            <label key={category} className="flex items-center gap-1.5 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={categories.includes(category)}
+                onChange={() => toggleCategory(category)}
+                disabled={saving}
+                className="accent-forest"
+              />
+              {category}
+            </label>
+          ))}
+        </div>
+      </div>
       <label className="flex flex-col gap-1 text-sm text-ink-soft">
-        줄거리
+        내용
         <textarea
-          placeholder="어떤 이야기였나요?"
-          value={summary}
-          onChange={(e) => setSummary(e.target.value)}
-          className={`${inputClass} min-h-[100px]`}
-          disabled={saving}
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-sm text-ink-soft">
-        느낌/감상
-        <textarea
-          placeholder="읽고 나서 어떤 생각이 들었나요?"
-          value={impression}
-          onChange={(e) => setImpression(e.target.value)}
-          className={`${inputClass} min-h-[100px]`}
+          placeholder="위에서 고른 것들에 대해 자유롭게 써 보세요."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className={`${inputClass} min-h-[160px]`}
           disabled={saving}
         />
       </label>

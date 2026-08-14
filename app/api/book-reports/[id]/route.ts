@@ -31,7 +31,7 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const body = await req.json();
-  const { title, author, summary, impression, status } = body;
+  const { title, author, categories, content, status } = body;
 
   // This endpoint is student-facing and unauthenticated. Students may only move
   // a report to 'draft' or 'submitted' — moving to 'approved'/'rejected' must go
@@ -46,8 +46,8 @@ export async function PATCH(
   const updateData: Record<string, unknown> = {};
   if (title !== undefined) updateData.title = title;
   if (author !== undefined) updateData.author = author;
-  if (summary !== undefined) updateData.summary = summary;
-  if (impression !== undefined) updateData.impression = impression;
+  if (categories !== undefined) updateData.categories = categories;
+  if (content !== undefined) updateData.content = content;
   if (status !== undefined) {
     updateData.status = status;
     if (status === 'submitted') {
