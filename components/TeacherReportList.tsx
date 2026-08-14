@@ -68,12 +68,12 @@ export function TeacherReportList({
         <thead>
           <tr className="border-b border-line text-left">
             <th className="p-3 eyebrow font-medium">학급</th>
+            <th className="p-3 eyebrow font-medium">번호</th>
             <th className="p-3 eyebrow font-medium">
               <button onClick={() => onSort('name')} className="flex items-center gap-1 hover:text-ink">
                 이름 {sortArrow('name')}
               </button>
             </th>
-            <th className="p-3 eyebrow font-medium">번호</th>
             <th className="p-3 eyebrow font-medium">제목</th>
             <th className="p-3 eyebrow font-medium">
               <button onClick={() => onSort('date')} className="flex items-center gap-1 hover:text-ink">
@@ -92,8 +92,8 @@ export function TeacherReportList({
               onClick={() => router.push(`/teacher/reports/${report.id}`)}
             >
               <td className="p-3 text-sm">{report.student.class.name}</td>
-              <td className="p-3 text-sm">{report.student.name}</td>
               <td className="p-3 text-sm">{report.student.number}</td>
+              <td className="p-3 text-sm">{report.student.name}</td>
               <td className="p-3 text-sm">{report.title}</td>
               <td className="p-3 text-sm whitespace-nowrap">
                 {formatDate(report.submitted_at ?? report.created_at)}
