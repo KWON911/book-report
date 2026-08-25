@@ -61,7 +61,7 @@ export default function TeacherDashboardPage() {
     try {
       await fetch('/api/teacher/logout', { method: 'POST' });
     } finally {
-      router.push('/teacher/login');
+      router.push('/');
     }
   }
 
