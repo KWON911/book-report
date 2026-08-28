@@ -12,7 +12,14 @@ export function getStudent(): Student | null {
   if (typeof window === 'undefined') return null;
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return null;
-  return JSON.parse(raw) as Student;
+  try {
+    return JSON.parse(raw) as Student;
+  } catch {
+    // Corrupted value (extension interference, partial write, tampering) —
+    // drop it instead of crashing the page with an uncaught parse error.
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
 }
 
 export function clearStudent(): void {

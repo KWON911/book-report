@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getStudent } from '@/lib/student-session';
+import { getStudent, clearStudent } from '@/lib/student-session';
 import { Student } from '@/lib/types';
 import { BookReportForm } from '@/components/BookReportForm';
 
@@ -32,7 +32,12 @@ export default function NewReportPage() {
     });
 
     if (!res.ok) {
-      throw new Error('Failed to save report');
+      const body = await res.json().catch(() => ({}));
+      if (body?.error === 'STALE_STUDENT') {
+        clearStudent();
+        throw new Error(body.message ?? '학생 정보를 찾을 수 없어요. 다시 로그인해주세요.');
+      }
+      throw new Error('저장 중 오류가 발생했습니다.');
     }
 
     router.push('/student');

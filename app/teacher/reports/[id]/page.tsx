@@ -27,6 +27,7 @@ export default function TeacherReportDetailPage({
       .then((res) => res.json())
       .then((data) => {
         setReport(data.report);
+        setComment(data.report?.teacher_comment ?? '');
         setLoading(false);
       })
       .catch(() => {

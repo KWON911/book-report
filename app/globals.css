@@ -23,9 +23,13 @@
   --color-ink-soft: var(--ink-soft);
   --color-line: var(--line);
   --color-forest: var(--forest);
+  --color-forest-soft: var(--forest-soft);
   --color-brass: var(--brass);
+  --color-brass-soft: var(--brass-soft);
   --color-plum: var(--plum);
+  --color-plum-soft: var(--plum-soft);
   --color-slate: var(--slate);
+  --color-slate-soft: var(--slate-soft);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }

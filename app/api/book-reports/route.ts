@@ -55,6 +55,14 @@ export async function POST(req: Request) {
 
   if (error) {
     console.error('POST /api/book-reports failed:', error);
+    // Foreign key violation: student_id no longer exists (e.g. a teacher
+    // deleted the student or reset the class after this device identified).
+    if (error.code === '23503') {
+      return NextResponse.json(
+        { error: 'STALE_STUDENT', message: '학생 정보를 찾을 수 없어요. 다시 로그인해주세요.' },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ error: 'Failed to create report' }, { status: 500 });
   }
 

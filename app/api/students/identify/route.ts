@@ -5,7 +5,8 @@ const UNIQUE_VIOLATION = '23505';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, class_id, number } = body;
+  const { class_id, number } = body;
+  const name = typeof body.name === 'string' ? body.name.trim() : body.name;
 
   const numberMissing =
     number === undefined || number === null || Number.isNaN(number);

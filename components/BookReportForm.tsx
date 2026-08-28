@@ -39,8 +39,8 @@ export function BookReportForm({
     setError(null);
     try {
       await onSave({ title, author, categories, content }, status);
-    } catch {
-      setError('저장 중 오류가 발생했습니다.');
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : '저장 중 오류가 발생했습니다.');
       setSaving(false);
     }
   }
@@ -54,6 +54,11 @@ export function BookReportForm({
         <div className="border border-plum bg-plum-soft p-3 rounded text-plum">
           <p className="font-medium">선생님 말씀</p>
           <p className="text-base mt-1">{initialData.teacher_comment}</p>
+        </div>
+      )}
+      {initialData?.status === 'approved' && (
+        <div className="border border-brass bg-brass-soft p-3 rounded text-brass">
+          이미 선생님이 확인한 독서록이에요. 여기서 저장하면 다시 검토를 받아야 해요.
         </div>
       )}
       {error && (
