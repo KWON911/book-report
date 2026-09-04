@@ -24,8 +24,15 @@ export default function TeacherReportDetailPage({
 
   useEffect(() => {
     fetch(`/api/teacher/book-reports/${id}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          router.push(res.status === 401 ? '/teacher/login' : '/teacher/dashboard');
+          return;
+        }
+        return res.json();
+      })
       .then((data) => {
+        if (!data) return;
         setReport(data.report);
         setComment(data.report?.teacher_comment ?? '');
         setLoading(false);
