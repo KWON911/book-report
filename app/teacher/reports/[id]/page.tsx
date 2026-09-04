@@ -1,12 +1,13 @@
 'use client';
 
 import { use, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { TeacherBookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
 import { TrashIcon } from '@/components/TrashIcon';
 import { formatDate } from '@/lib/format-date';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { parseReviewQueue, reviewQueueHref } from '@/lib/review-queue';
 
 export default function TeacherReportDetailPage({
   params,
@@ -14,6 +15,8 @@ export default function TeacherReportDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const searchParams = useSearchParams();
+  const queuePosition = parseReviewQueue(searchParams.get('queue'), searchParams.get('index'), id);
   const router = useRouter();
   const [report, setReport] = useState<TeacherBookReport | null>(null);
   const [comment, setComment] = useState('');
@@ -44,6 +47,10 @@ export default function TeacherReportDetailPage({
   }, [id, router]);
 
   async function handleReview(decision: 'approved' | 'rejected') {
+    if (decision === 'rejected' && !comment.trim()) {
+      setError('반려 사유를 입력해 주세요.');
+      return;
+    }
     if (!report) return;
     setSubmitting(true);
     setError(null);
@@ -56,6 +63,11 @@ export default function TeacherReportDetailPage({
 
       if (!res.ok) {
         throw new Error('Failed to review report');
+      }
+
+      if (queuePosition?.nextId) {
+        router.push(`/teacher/reports/${queuePosition.nextId}${reviewQueueHref(queuePosition.ids, queuePosition.index + 1)}`);
+        return;
       }
 
       router.push('/teacher/dashboard');
@@ -104,6 +116,27 @@ export default function TeacherReportDetailPage({
         <p className="text-base text-ink-soft mb-1">
           {report.student.class.name} · {report.student.number}번 · {report.student.name}
         </p>
+        {queuePosition && (
+          <div className="flex items-center justify-between text-sm text-ink-soft mb-2">
+            <span>검토 대기열 {queuePosition.index + 1} / {queuePosition.ids.length}</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => router.push(`/teacher/reports/${queuePosition.previousId}${reviewQueueHref(queuePosition.ids, queuePosition.index - 1)}`)}
+                disabled={!queuePosition.previousId || submitting}
+                className="border border-line bg-paper-raised px-3 py-1 rounded disabled:opacity-50 hover:bg-slate-soft"
+              >
+                이전
+              </button>
+              <button
+                onClick={() => router.push(`/teacher/reports/${queuePosition.nextId}${reviewQueueHref(queuePosition.ids, queuePosition.index + 1)}`)}
+                disabled={!queuePosition.nextId || submitting}
+                className="border border-line bg-paper-raised px-3 py-1 rounded disabled:opacity-50 hover:bg-slate-soft"
+              >
+                다음
+              </button>
+            </div>
+          </div>
+        )}
         <p className="text-sm text-ink-soft mb-4">
           {formatDate(report.submitted_at ?? report.created_at)}
           {report.submitted_at ? ' 제출' : ' 작성'}
