@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BookReport } from '@/lib/types';
+import { TeacherBookReport } from '@/lib/types';
 import { StatusStamp } from '@/components/StatusStamp';
 import { TrashIcon } from '@/components/TrashIcon';
 import { formatDate } from '@/lib/format-date';
@@ -15,7 +15,7 @@ export default function TeacherReportDetailPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
-  const [report, setReport] = useState<BookReport | null>(null);
+  const [report, setReport] = useState<TeacherBookReport | null>(null);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -23,7 +23,7 @@ export default function TeacherReportDetailPage({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/book-reports/${id}`)
+    fetch(`/api/teacher/book-reports/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setReport(data.report);
@@ -94,11 +94,18 @@ export default function TeacherReportDetailPage({
           <h1 className="text-2xl">{report.title}</h1>
           <StatusStamp status={report.status} />
         </div>
+        <p className="text-base text-ink-soft mb-1">
+          {report.student.class.name} · {report.student.number}번 · {report.student.name}
+        </p>
         <p className="text-sm text-ink-soft mb-4">
           {formatDate(report.submitted_at ?? report.created_at)}
           {report.submitted_at ? ' 제출' : ' 작성'}
         </p>
         <div className="card space-y-3 mb-5 p-4">
+          <p className="text-base">
+            <span className="eyebrow mr-1">작성 학생</span>
+            {report.student.name} ({report.student.class.name} · {report.student.number}번)
+          </p>
           <p className="text-base">
             <span className="eyebrow mr-1">지은이</span> {report.author || '없음'}
           </p>
