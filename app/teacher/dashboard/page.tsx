@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
+import { createReviewQueue, reviewQueueHref } from '@/lib/review-queue';
 import { TeacherReportList } from '@/components/TeacherReportList';
 
 type TeacherReport = BookReport & {
@@ -21,6 +22,7 @@ export default function TeacherDashboardPage() {
   const [sortKey, setSortKey] = useState<SortKey>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [classes, setClasses] = useState<ClassOption[]>([]);
+  const [reviewQueueIds, setReviewQueueIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -30,6 +32,21 @@ export default function TeacherDashboardPage() {
       .then((data) => setClasses(data?.classes ?? []))
       .catch(() => setClasses([]));
   }, []);
+
+  useEffect(() => {
+    fetch('/api/teacher/book-reports?status=submitted')
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 401) {
+            router.push('/teacher/login');
+          }
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => setReviewQueueIds(createReviewQueue(data?.reports ?? [])))
+      .catch(() => setReviewQueueIds([]));
+  }, [router]);
 
   useEffect(() => {
     setLoading(true);
@@ -169,6 +186,17 @@ export default function TeacherDashboardPage() {
             ))}
           </select>
         </div>
+        <button
+          onClick={() =>
+            router.push(
+              `/teacher/reports/${reviewQueueIds[0]}${reviewQueueHref(reviewQueueIds, 0)}`
+            )
+          }
+          disabled={reviewQueueIds.length === 0}
+          className="mb-4 border border-line bg-paper-raised text-ink px-3 py-2 rounded hover:bg-slate-soft disabled:opacity-50"
+        >
+          검토 대기 {reviewQueueIds.length}건
+        </button>
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
         ) : (
