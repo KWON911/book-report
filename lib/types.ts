@@ -17,3 +17,7 @@ export interface BookReport {
   created_at: string;
   submitted_at: string | null;
 }
+
+export interface TeacherBookReport extends BookReport {
+  student: { id: string; name: string; number: number; class: { name: string } };
+}
