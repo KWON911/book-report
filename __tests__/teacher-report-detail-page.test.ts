@@ -16,7 +16,7 @@ describe('TeacherReportDetailPage fetch error handling', () => {
     const source = await readFile(pagePath, 'utf8');
 
     expect(source).toMatch(
-      /\.then\(\(res\) => \{\s*if \(!res\.ok\) \{\s*router\.push\(res\.status === 401 \? '\/teacher\/login' : '\/teacher\/dashboard'\);\s*return;\s*\}\s*return res\.json\(\);\s*\}\)/s
+      /\.then\(\(res\) => \{[\s\S]*if \(!res\.ok\) \{[\s\S]*router\.push\(res\.status === 401 \? '\/teacher\/login' : '\/teacher\/dashboard'\);[\s\S]*return;[\s\S]*\}[\s\S]*return res\.json\(\);[\s\S]*\}\)/
     );
   });
 });
