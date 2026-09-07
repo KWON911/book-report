@@ -149,11 +149,11 @@ export default function TeacherDashboardPage() {
             </button>
           </div>
         </div>
-        <div className="flex flex-nowrap gap-1.5 sm:gap-2 mb-4 items-center">
+        <div className="flex flex-wrap items-center gap-2 rounded border border-line bg-paper-raised p-2 mb-4">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
+            className="w-full sm:w-[8.5rem] border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
           >
             <option value="">전체 상태</option>
             <option value="submitted">제출됨</option>
@@ -163,7 +163,7 @@ export default function TeacherDashboardPage() {
           <select
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
-            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
+            className="w-full sm:w-[10rem] border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
           >
             <option value="">전체 학급</option>
             {classes.map((c) => (
@@ -175,7 +175,7 @@ export default function TeacherDashboardPage() {
           <select
             value={studentFilter}
             onChange={(e) => setStudentFilter(e.target.value)}
-            className="flex-1 min-w-0 border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate"
+            className="w-full sm:w-[10rem] border border-line bg-paper-raised text-ink rounded px-2 sm:px-3 py-2 text-sm sm:text-base truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
             disabled={studentOptions.length === 0}
           >
             <option value="">전체 학생</option>
@@ -185,18 +185,19 @@ export default function TeacherDashboardPage() {
               </option>
             ))}
           </select>
+          <button
+            onClick={() =>
+              router.push(
+                `/teacher/reports/${reviewQueueIds[0]}${reviewQueueHref(reviewQueueIds, 0)}`
+              )
+            }
+            disabled={reviewQueueIds.length === 0}
+            aria-label={`검토 대기 독서록 ${reviewQueueIds.length}건`}
+            className="sm:ml-auto w-full sm:w-auto bg-forest text-paper-raised border border-forest px-3 py-2 rounded hover:opacity-90 disabled:bg-paper-raised disabled:text-ink-soft disabled:border-line disabled:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+          >
+            검토 대기 <strong>{reviewQueueIds.length}건</strong> →
+          </button>
         </div>
-        <button
-          onClick={() =>
-            router.push(
-              `/teacher/reports/${reviewQueueIds[0]}${reviewQueueHref(reviewQueueIds, 0)}`
-            )
-          }
-          disabled={reviewQueueIds.length === 0}
-          className="mb-4 border border-line bg-paper-raised text-ink px-3 py-2 rounded hover:bg-slate-soft disabled:opacity-50"
-        >
-          검토 대기 {reviewQueueIds.length}건
-        </button>
         {loading ? (
           <p className="text-ink-soft">로딩 중...</p>
         ) : (

@@ -20,6 +20,19 @@ const detailPagePath = path.join(
 );
 
 describe('TeacherDashboardPage review queue entry', () => {
+  it('uses a compact responsive toolbar and keeps the review queue entry prominent', async () => {
+    const source = await readFile(pagePath, 'utf8');
+
+    expect(source).toContain('flex flex-wrap items-center gap-2 rounded border border-line bg-paper-raised p-2 mb-4');
+    expect(source).toContain('w-full sm:w-[8.5rem]');
+    expect(source).toContain('w-full sm:w-[10rem]');
+    expect(source).toContain('sm:ml-auto');
+    expect(source).toContain('w-full sm:w-auto bg-forest text-paper-raised');
+    expect(source).toContain('focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest');
+    expect(source).toContain('disabled:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest');
+    expect(source).toContain('aria-label={`검토 대기 독서록 ${reviewQueueIds.length}건`}');
+  });
+
   it('loads submitted reports into a separate review queue and disables an empty entry', async () => {
     const source = await readFile(pagePath, 'utf8');
 
