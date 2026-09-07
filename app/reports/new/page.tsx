@@ -48,7 +48,7 @@ export default function NewReportPage() {
       <div className="w-full max-w-2xl">
         <p className="eyebrow mb-1">새 독서카드</p>
         <h1 className="text-2xl mb-5">새 독서록 작성</h1>
-        <BookReportForm onSave={handleSave} onCancel={() => router.push('/student')} />
+        <BookReportForm draftKey={`book-report-draft:${student.id}:new`} onSave={handleSave} onCancel={() => router.push('/student')} />
       </div>
     </main>
   );

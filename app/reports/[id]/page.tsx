@@ -52,6 +52,8 @@ export default function EditReportPage({
         <p className="eyebrow mb-1">독서카드 수정</p>
         <h1 className="text-2xl mb-5">독서록 수정</h1>
         <BookReportForm
+          key={report.id}
+          draftKey={`book-report-draft:${report.student_id}:${report.id}`}
           initialData={report}
           onSave={handleSave}
           onCancel={() => router.back()}
