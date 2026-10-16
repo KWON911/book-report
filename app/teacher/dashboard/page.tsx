@@ -188,6 +188,7 @@ export default function TeacherDashboardPage() {
             onReportDeleted={handleReportDeleted}
             sortRules={sortRules}
             onSort={handleSort}
+            onClearSort={() => setSortRules([])}
           />
         )}
       </div>

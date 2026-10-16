@@ -18,11 +18,13 @@ export function TeacherReportList({
   onReportDeleted,
   sortRules,
   onSort,
+  onClearSort,
 }: {
   reports: TeacherReport[];
   onReportDeleted: (reportId: string) => void;
   sortRules: SortRule[];
   onSort: (key: SortKey) => void;
+  onClearSort: () => void;
 }) {
   const router = useRouter();
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
@@ -73,6 +75,17 @@ export function TeacherReportList({
     <>
       {deleteError && (
         <p className="text-plum text-sm p-3 mb-2 card">{deleteError}</p>
+      )}
+
+      {sortRules.length > 0 && (
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={onClearSort}
+            className="text-sm text-ink-soft underline underline-offset-2 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+          >
+            정렬 해제
+          </button>
+        </div>
       )}
 
       {/* Mobile: card list, no fixed-width table to squeeze */}

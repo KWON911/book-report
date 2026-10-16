@@ -26,6 +26,7 @@ describe('teacher report sorting', () => {
     ];
     expect(sortReports(reports, rules).map((item) => item.id)).toEqual(['a', 'b', 'older']);
     expect(reports.map((item) => item.id)).toEqual(['older', 'b', 'a']);
+    expect(sortReports(reports, []).map((item) => item.id)).toEqual(['older', 'b', 'a']);
     expect(updateSortRules(rules, 'name')).toEqual([
       { key: 'date', order: 'desc' },
       { key: 'name', order: 'desc' },
