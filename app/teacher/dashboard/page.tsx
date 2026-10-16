@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { BookReport } from '@/lib/types';
 import { createReviewQueue, reviewQueueHref } from '@/lib/review-queue';
 import { TeacherReportList } from '@/components/TeacherReportList';
+import { sortReports, updateSortRules, type SortKey, type SortRule } from '@/lib/report-sort';
 
 type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
 };
 
 type ClassOption = { id: string; name: string };
-type SortKey = 'date' | 'name' | 'number';
 
 export default function TeacherDashboardPage() {
   const router = useRouter();
@@ -19,8 +19,7 @@ export default function TeacherDashboardPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [classFilter, setClassFilter] = useState('');
   const [studentFilter, setStudentFilter] = useState('');
-  const [sortKey, setSortKey] = useState<SortKey>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortRules, setSortRules] = useState<SortRule[]>([{ key: 'date', order: 'desc' }]);
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [reviewQueueIds, setReviewQueueIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,12 +86,7 @@ export default function TeacherDashboardPage() {
   }
 
   function handleSort(key: SortKey) {
-    if (sortKey === key) {
-      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortKey(key);
-      setSortOrder('asc');
-    }
+    setSortRules((prev) => updateSortRules(prev, key));
   }
 
   const studentOptions = useMemo(() => {
@@ -110,20 +104,8 @@ export default function TeacherDashboardPage() {
       ? reports.filter((r) => r.student.id === studentFilter)
       : reports;
 
-    return [...filtered].sort((a, b) => {
-      let diff: number;
-      if (sortKey === 'name') {
-        diff = a.student.name.localeCompare(b.student.name, 'ko');
-      } else if (sortKey === 'number') {
-        diff = a.student.number - b.student.number;
-      } else {
-        const aDate = new Date(a.submitted_at ?? a.created_at).getTime();
-        const bDate = new Date(b.submitted_at ?? b.created_at).getTime();
-        diff = aDate - bDate;
-      }
-      return sortOrder === 'asc' ? diff : -diff;
-    });
-  }, [reports, studentFilter, sortKey, sortOrder]);
+    return sortReports(filtered, sortRules);
+  }, [reports, studentFilter, sortRules]);
 
   return (
     <main className="page-shell">
@@ -204,8 +186,7 @@ export default function TeacherDashboardPage() {
           <TeacherReportList
             reports={visibleReports}
             onReportDeleted={handleReportDeleted}
-            sortKey={sortKey}
-            sortOrder={sortOrder}
+            sortRules={sortRules}
             onSort={handleSort}
           />
         )}

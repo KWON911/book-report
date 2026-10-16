@@ -7,24 +7,21 @@ import { StatusStamp } from '@/components/StatusStamp';
 import { TrashIcon } from '@/components/TrashIcon';
 import { formatDate } from '@/lib/format-date';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import type { SortKey, SortRule } from '@/lib/report-sort';
 
 type TeacherReport = BookReport & {
   student: { id: string; name: string; number: number; class: { name: string } };
 };
 
-type SortKey = 'date' | 'name' | 'number';
-
 export function TeacherReportList({
   reports,
   onReportDeleted,
-  sortKey,
-  sortOrder,
+  sortRules,
   onSort,
 }: {
   reports: TeacherReport[];
   onReportDeleted: (reportId: string) => void;
-  sortKey: SortKey;
-  sortOrder: 'asc' | 'desc';
+  sortRules: SortRule[];
   onSort: (key: SortKey) => void;
 }) {
   const router = useRouter();
@@ -60,10 +57,13 @@ export function TeacherReportList({
   }
 
   function sortArrow(key: SortKey) {
-    const active = sortKey === key;
-    const arrow = active && sortOrder === 'desc' ? '↓' : '↑';
+    const priority = sortRules.findIndex((rule) => rule.key === key);
+    const active = priority !== -1;
+    const arrow = active && sortRules[priority].order === 'desc' ? '↓' : '↑';
     return (
-      <span className={active ? 'text-ink' : 'text-ink-soft opacity-50'}>{arrow}</span>
+      <span className={active ? 'text-ink' : 'text-ink-soft opacity-50'}>
+        {arrow}{active && sortRules.length > 1 ? priority + 1 : ''}
+      </span>
     );
   }
 
